@@ -5,5 +5,5 @@ def handle_about(bot):
     def about(call):
         if call.data == "data1":
             bot.answer_callback_query(call.id,text="Hey")
-        elif call.data == "Activity":
+        elif call.data == "data2":
             pass
