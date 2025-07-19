@@ -15,7 +15,7 @@ def insert_activity(message_id: int, title: str):
 def get_activities():
     conn = get_conn()
     cur = conn.cursor()
-    cur.execute("SELECT id, title FROM activities")
+    cur.execute("SELECT id , title FROM activities")
     rows = cur.fetchall()
     cur.close()
     conn.close()
