@@ -7,5 +7,8 @@ def post_handler(bot):
         content_types = ["text" , "photo" , "video" , "audio" , "voice" , "document"]
     )
     def update_db_content(msg):
-        msg_title = title_spliter(msg.text) if msg.content_type == "text" else title_spliter(msg.caption)
-        insert_activity(msg.message_id , msg_title)
+        try:
+            msg_title = title_spliter(msg.text) if msg.content_type == "text" else title_spliter(msg.caption or "")
+            insert_activity(msg.message_id , msg_title)
+        except Exception as e:
+            print(f"[Error] Unexpected error happend : {e}")
