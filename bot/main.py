@@ -3,7 +3,7 @@ from bot.handlers import start, about , channel_posts , activity
 import telebot
 import os
 
-load_dotenv()
+load_dotenv(override = True)
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 bot = telebot.TeleBot(BOT_TOKEN, parse_mode="HTML")
