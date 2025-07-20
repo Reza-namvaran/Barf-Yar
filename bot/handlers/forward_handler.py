@@ -25,7 +25,7 @@ def forward_handler(bot):
 
             message_id, title = data
 
-            bot.forward_message(
+            bot.copy_message(
                 chat_id=call.message.chat.id,
                 from_chat_id=PRIVATE_CHANNEL_ID,
                 message_id=message_id
