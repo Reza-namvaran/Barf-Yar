@@ -11,7 +11,7 @@ def activity_handler(bot):
             all_activities = get_activities()
             buttons = [
                 InlineKeyboardButton (
-                    text = f"{title}",
+                    text = (title[:10] + "…") if len(title) > 10 else title,
                     callback_data = f"activity_{id}"
                 )
                 for id , title in all_activities
