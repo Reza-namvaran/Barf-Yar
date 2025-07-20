@@ -20,3 +20,24 @@ def get_activities():
     cur.close()
     conn.close()
     return rows
+
+def get_activities_by_id(activity_id: int):
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute("SELECT message_id, title FROM activities WHERE id = %s", (activity_id,))
+    row = cur.fetchone()
+    cur.close()
+    conn.close()
+    return row
+
+def update_activity_title(message_id: int, new_title: str):
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute(
+        "UPDATE activities SET title = %s WHERE message_id = %s",
+        (new_title , message_id)
+    )
+    conn.commit()
+    cur.close()
+    conn.close()
+    

@@ -12,7 +12,7 @@ def activity_handler(bot):
             buttons = [
                 InlineKeyboardButton (
                     text = f"{title}",
-                    callback_data = id
+                    callback_data = f"activity_{id}"
                 )
                 for id , title in all_activities
             ]
