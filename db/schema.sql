@@ -8,12 +8,12 @@ CREATE TABLE IF NOT EXISTS activities (
 CREATE TABLE IF NOT EXISTS activity_prompts (
     id SERIAL PRIMARY KEY,
     activity_id INTEGER UNIQUE NOT NULL REFERENCES activities(id) ON DELETE CASCADE,
-    prompt_message_id INTEGER NOT NULL
+    prompt_message_id BIGINT UNIQUE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS activity_supporters (
     id SERIAL PRIMARY KEY,
-    activity_id INTEGER REFERENCES activities(id) ON DELETE CASCADE,
+    activity_id INTEGER NOT NULL REFERENCES activities(id) ON DELETE CASCADE,
     user_id BIGINT NOT NULL,                   
     joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(activity_id, user_id)
