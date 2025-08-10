@@ -2,6 +2,7 @@ package di
 
 import (
 	"database/sql"
+	"log"
 	"sync"
 
 	"github.com/Reza-namvaran/Barf-Yar/panel/internal/auth"
@@ -37,54 +38,48 @@ func (c *Container) GetDB() *sql.DB {
 }
 
 func (c *Container) GetAuthService() auth.Service {
-	c.mu.RLock()
-	defer c.mu.RUnlock()
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
 	if c.auth == nil {
-		c.mu.RUnlock()
-		c.mu.Lock()
-		if c.auth == nil {
-			c.auth = auth.NewService()
-		}
-		c.mu.Unlock()
-		c.mu.RLock()
+		c.auth = auth.NewService()
 	}
 	return c.auth
 }
 
 func (c *Container) GetAdminService() storage.AdminService {
-	c.mu.RLock()
-	defer c.mu.RUnlock()
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
 	if c.admin == nil {
-		c.mu.RUnlock()
-		c.mu.Lock()
-		if c.admin == nil {
-			c.admin = storage.NewAdminService(c.db)
-		}
-		c.mu.Unlock()
-		c.mu.RLock()
+		c.admin = storage.NewAdminService(c.db)
+	} else {
 	}
+
+	log.Println("  Returning admin service...")
 	return c.admin
 }
 
 func (c *Container) GetTemplateService() *templates.TemplateService {
-	c.mu.RLock()
-	defer c.mu.RUnlock()
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
 	if c.template == nil {
-		c.mu.RUnlock()
-		c.mu.Lock()
-		if c.template == nil {
-			var err error
-			c.template, err = templates.NewTemplateService()
-			if err != nil {
-				panic(err)
-			}
+		var err error
+		c.template, err = templates.NewTemplateService()
+		if err != nil {
+			panic(err)
 		}
-		c.mu.Unlock()
-		c.mu.RLock()
 	}
 	return c.template
 }
 
 func (c *Container) GetHandlers() *handlers.Handlers {
-	return handlers.NewHandlers(c.GetAuthService(), c.GetAdminService(), c.GetTemplateService())
+	authService := c.GetAuthService()
+	log.Println("Getting admin service...")
+	adminService := c.GetAdminService()
+	log.Println("Getting template service...")
+	templateService := c.GetTemplateService()
+	log.Println("Creating handlers...")
+	return handlers.NewHandlers(authService, adminService, templateService)
 }
