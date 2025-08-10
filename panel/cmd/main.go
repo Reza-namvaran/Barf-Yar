@@ -7,6 +7,7 @@ import (
 
 	"github.com/Reza-namvaran/Barf-Yar/panel/internal/config"
 	"github.com/Reza-namvaran/Barf-Yar/panel/internal/di"
+	"github.com/Reza-namvaran/Barf-Yar/panel/internal/handlers"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
@@ -33,16 +34,9 @@ func main() {
 
 	container.SetDB(db)
 
-	handlers := container.GetHandlers()
+	app_handlers := container.GetHandlers()
 
-	fs := http.FileServer(http.Dir("static"))
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
-
-	// Setup routes
-	http.HandleFunc("/", handlers.LoginPage)
-	http.HandleFunc("/api/login", handlers.Login)
-	http.HandleFunc("/api/logout", handlers.Logout)
-	http.HandleFunc("/dashboard", handlers.Dashboard)
+	handlers.SetupRoutes(app_handlers)
 
 	log.Printf("Server starting on port %s", config.ServerPort)
 	log.Fatal(http.ListenAndServe(":"+config.ServerPort, nil))
