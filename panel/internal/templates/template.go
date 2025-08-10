@@ -6,6 +6,7 @@ import (
 	"io"
 )
 
+//go:embed *.html
 var templates embed.FS
 
 type TemplateService struct {
