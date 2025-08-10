@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>Welcome to Admin Dashboard</h1>
+            <nav class="dashboard-nav">
+                <a href="/dashboard" class="nav-link active">Activities</a>
+                <a href="/dashboard" class="nav-link active">Supporters</a>
+                <a href="/api/logout" class="nav-link logout">Logout</a>
+            </nav>
+        </header>
+        
+        <main class="dashboard-main">
+            <div class="welcome-section">
+                <h2>Welcome back, Admin!</h2>
+                <p>You are successfully logged in to the admin panel.</p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Users</h3>
+                    <p class="stat-number">TODO (optional)</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total activities</h3>
+                    <p class="stat-number">TODO</p>
+                </div>
+                <div class="stat-card">
+                    <h3>System Status</h3>
+                    <p class="stat-status online">Online(TODO)</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>
