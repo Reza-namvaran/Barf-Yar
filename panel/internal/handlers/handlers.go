@@ -13,13 +13,15 @@ import (
 type Handlers struct {
 	authService     auth.Service
 	adminService    storage.AdminService
+	activityService storage.ActivityService
 	templateService *templates.TemplateService
 }
 
-func NewHandlers(authService auth.Service, adminService storage.AdminService, templateService *templates.TemplateService) *Handlers {
+func NewHandlers(authService auth.Service, adminService storage.AdminService, activityService storage.ActivityService, templateService *templates.TemplateService) *Handlers {
 	return &Handlers{
 		authService:     authService,
 		adminService:    adminService,
+		activityService: activityService,
 		templateService: templateService,
 	}
 }
@@ -129,9 +131,19 @@ func (h *Handlers) Logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
+	// Get activity count
+	activityCount, err := h.activityService.CountActivities()
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
 	w.Header().Set("Content-Type", "text/html")
 	data := templates.TemplateData{
 		Title: "Admin Dashboard",
+		Data: map[string]interface{}{
+			"ActivityCount": activityCount,
+		},
 	}
 
 	if err := h.templateService.RenderTemplate(w, "dashboard.html", data); err != nil {

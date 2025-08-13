@@ -32,4 +32,5 @@ type TemplateData struct {
 	Title   string
 	Message string
 	Error   string
+	Data 	interface{}	
 }

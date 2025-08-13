@@ -16,6 +16,7 @@ type Container struct {
 	db       *sql.DB
 	auth     auth.Service
 	admin    storage.AdminService
+	activity storage.ActivityService
 	template *templates.TemplateService
 	mu       sync.RWMutex
 }
@@ -60,6 +61,16 @@ func (c *Container) GetAdminService() storage.AdminService {
 	return c.admin
 }
 
+func (c *Container) GetActivityService() storage.ActivityService {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if c.activity == nil {
+		db := c.db
+		c.activity = storage.NewActivityService(db)
+	}
+	return c.activity
+}
+
 func (c *Container) GetTemplateService() *templates.TemplateService {
 	c.mu.Lock()
 	defer c.mu.Unlock()
@@ -78,8 +89,10 @@ func (c *Container) GetHandlers() *handlers.Handlers {
 	authService := c.GetAuthService()
 	log.Println("Getting admin service...")
 	adminService := c.GetAdminService()
+	log.Println("Getting activity service...")
+	activityService := c.GetActivityService()
 	log.Println("Getting template service...")
 	templateService := c.GetTemplateService()
 	log.Println("Creating handlers...")
-	return handlers.NewHandlers(authService, adminService, templateService)
+	return handlers.NewHandlers(authService, adminService, activityService, templateService)
 }

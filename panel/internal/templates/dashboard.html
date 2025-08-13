@@ -11,7 +11,7 @@
         <header class="dashboard-header">
             <h1>Welcome to Admin Dashboard</h1>
             <nav class="dashboard-nav">
-                <a href="/dashboard" class="nav-link active">Activities</a>
+                <a href="/activities" class="nav-link active">Activities</a>
                 <a href="/dashboard" class="nav-link active">Supporters</a>
                 <a href="/api/logout" class="nav-link logout">Logout</a>
             </nav>
@@ -30,7 +30,7 @@
                 </div>
                 <div class="stat-card">
                     <h3>Total activities</h3>
-                    <p class="stat-number">TODO</p>
+                    <p class="stat-number">{{if .Data}}{{.Data.ActivityCount}}{{else}}0{{end}}</p>
                 </div>
                 <div class="stat-card">
                     <h3>System Status</h3>
