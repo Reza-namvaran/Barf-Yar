@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+    <h1>Activities</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Message ID</th>
+                <th>Title</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .Data}}
+            <tr>
+                <td>{{.ID}}</td>
+                <td>{{.MessageID}}</td>
+                <td>{{.Title}}</td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+    <a href="/dashboard">Back to Dashboard</a>
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>
