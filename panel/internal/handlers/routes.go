@@ -22,5 +22,5 @@ func SetupRoutes(handlers *Handlers) {
 			http.HandlerFunc(handlers.Dashboard),
 		),
 	)
-	http.HandleFunc("/activities", handlers.Activities)
+	http.HandleFunc("/dashboard/activities", handlers.GetAllActivities)
 }

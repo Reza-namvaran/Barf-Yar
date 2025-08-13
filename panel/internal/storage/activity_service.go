@@ -4,6 +4,7 @@ import (
 	"database/sql"
 )
 
+// TODO: Move to modele folder
 type Activity struct {
 	ID        int    `json:"id"`
 	MessageID int64  `json:"message_id"`
@@ -33,6 +34,7 @@ func (s *activityService) GetActivityByID(id int) (*Activity, error) {
 		FROM activities 
 		WHERE id = $1`, id).Scan(&activity.ID, &activity.MessageID, &activity.Title)
 	if err != nil {
+		//TODO: cutomize error
 		return nil, err
 	}
 
@@ -45,11 +47,10 @@ func (s *activityService) GetAllActivities() ([]*Activity, error) {
 		FROM activities
 		ORDER BY id ASC`)
 
-	defer rows.Close()
-
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 	var allActivities []*Activity
 	for rows.Next() {
 		a := &Activity{}

@@ -6,17 +6,19 @@ import (
 	"github.com/Reza-namvaran/Barf-Yar/panel/internal/templates"
 )
 
-func (h *Handlers) Activities(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) GetAllActivities(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
+	// TODO Replace with middleware
 	cookie, err := r.Cookie("session_token")
 	if err != nil || !h.authService.ValidateSessionToken(cookie.Value) {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
+	//==================================================================
 
 	activities, err := h.activityService.GetAllActivities()
 	if err != nil {
