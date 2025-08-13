@@ -30,7 +30,7 @@
                 </div>
                 <div class="stat-card">
                     <h3>Total activities</h3>
-                    <p class="stat-number">TODO</p>
+                    <p class="stat-number">{{if .Data}}{{.Data.ActivityCount}}{{else}}0{{end}}</p>
                 </div>
                 <div class="stat-card">
                     <h3>System Status</h3>

@@ -17,6 +17,7 @@ type activityService struct {
 type ActivityService interface {
 	GetActivityByID(id int) (*Activity, error)
 	GetAllActivities() ([]*Activity, error)
+	CountActivities() (int, error)
 	// AddActivity()
 	// DeleteActivity()
 }
@@ -60,4 +61,13 @@ func (s *activityService) GetAllActivities() ([]*Activity, error) {
 	}
 
 	return allActivities, nil
+}
+
+func (s *activityService) CountActivities() (int, error) {
+	var count int
+	err := s.db.QueryRow(`SELECT COUNT(*) FROM activities`).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
 }

@@ -131,9 +131,19 @@ func (h *Handlers) Logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
+	// Get activity count
+	activityCount, err := h.activityService.CountActivities()
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
 	w.Header().Set("Content-Type", "text/html")
 	data := templates.TemplateData{
 		Title: "Admin Dashboard",
+		Data: map[string]interface{}{
+			"ActivityCount": activityCount,
+		},
 	}
 
 	if err := h.templateService.RenderTemplate(w, "dashboard.html", data); err != nil {
