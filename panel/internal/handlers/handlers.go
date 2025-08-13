@@ -129,12 +129,6 @@ func (h *Handlers) Logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
-	cookie, err := r.Cookie("session_token")
-	if err != nil || !h.authService.ValidateSessionToken(cookie.Value) {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
-
 	w.Header().Set("Content-Type", "text/html")
 	data := templates.TemplateData{
 		Title: "Admin Dashboard",
