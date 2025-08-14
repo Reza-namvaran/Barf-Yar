@@ -48,6 +48,14 @@ func (h *Handlers) AddActivityHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
+
+	// TODO Replace with middleware
+	cookie, err := r.Cookie("session_token")
+	if err != nil || !h.authService.ValidateSessionToken(cookie.Value) {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+	//==================================================================
 	var activity storage.Activity
 
 	if err := json.NewDecoder(r.Body).Decode(&activity); err != nil {
@@ -69,6 +77,15 @@ func (h *Handlers) DeleteActivityHandler(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
+
+	// TODO Replace with middleware
+	cookie, err := r.Cookie("session_token")
+	if err != nil || !h.authService.ValidateSessionToken(cookie.Value) {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+	//==================================================================
+
 	idStr := strings.TrimPrefix(r.URL.Path[len("/dashboard/activities/delete"):], "/")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
