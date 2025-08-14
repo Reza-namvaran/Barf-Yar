@@ -77,7 +77,7 @@ func (s *activityService) CountActivities() (int, error) {
 
 func (s *activityService) AddActivity(activity *Activity) error {
 	var existingID int
-	err := s.db.QueryRow(`SELECT id FROM activities WHERE message_id = $1, activity.MessageID`).Scan(&existingID)
+	err := s.db.QueryRow(`SELECT id FROM activities WHERE message_id = $1`, activity.MessageID).Scan(&existingID)
 	if err == nil {
 		return errors.New("this activity already exist")
 	} else if err != sql.ErrNoRows {
@@ -90,8 +90,7 @@ func (s *activityService) AddActivity(activity *Activity) error {
 }
 
 func (s *activityService) DeleteActivity(id int) error {
-	_, err := s.db.Exec(`DELETE FROM (id, message_id, title, created_at) 
-      WHERE id = $1`, id)
+	_, err := s.db.Exec(`DELETE FROM activities WHERE id = $1`, id)
 
 	return err
 }

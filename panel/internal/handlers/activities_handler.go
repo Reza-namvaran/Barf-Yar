@@ -2,10 +2,12 @@ package handlers
 
 import (
 	"encoding/json"
-	"github.com/Reza-namvaran/Barf-Yar/panel/internal/storage"
-	"github.com/Reza-namvaran/Barf-Yar/panel/internal/templates"
 	"net/http"
 	"strconv"
+	"strings"
+
+	"github.com/Reza-namvaran/Barf-Yar/panel/internal/storage"
+	"github.com/Reza-namvaran/Barf-Yar/panel/internal/templates"
 )
 
 func (h *Handlers) GetAllActivities(w http.ResponseWriter, r *http.Request) {
@@ -67,7 +69,7 @@ func (h *Handlers) DeleteActivityHandler(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	idStr := r.URL.Path[len("/dashboard/activities/delete"):]
+	idStr := strings.TrimPrefix(r.URL.Path[len("/dashboard/activities/delete"):], "/")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		http.Error(w, "Invalid ID", http.StatusInternalServerError)
