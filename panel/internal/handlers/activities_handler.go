@@ -17,9 +17,8 @@ func (h *Handlers) GetAllActivities(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// TODO Replace with middleware
-	cookie, err := r.Cookie("session_token")
-	if err != nil || !h.authService.ValidateSessionToken(cookie.Value) {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+	if !h.authenticate(r) {
+		http.Error(w, "Unauthorized", http.StatusInternalServerError)
 		return
 	}
 	//==================================================================
@@ -50,9 +49,8 @@ func (h *Handlers) AddActivityHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// TODO Replace with middleware
-	cookie, err := r.Cookie("session_token")
-	if err != nil || !h.authService.ValidateSessionToken(cookie.Value) {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+	if !h.authenticate(r) {
+		http.Error(w, "Unauthorized", http.StatusInternalServerError)
 		return
 	}
 	//==================================================================
@@ -79,9 +77,8 @@ func (h *Handlers) DeleteActivityHandler(w http.ResponseWriter, r *http.Request)
 	}
 
 	// TODO Replace with middleware
-	cookie, err := r.Cookie("session_token")
-	if err != nil || !h.authService.ValidateSessionToken(cookie.Value) {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+	if !h.authenticate(r) {
+		http.Error(w, "Unauthorized", http.StatusInternalServerError)
 		return
 	}
 	//==================================================================
@@ -98,4 +95,13 @@ func (h *Handlers) DeleteActivityHandler(w http.ResponseWriter, r *http.Request)
 	}
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{"message": "activity deleted successfully"})
+}
+
+// helper function for authentication
+func (h *Handlers) authenticate(r *http.Request) bool {
+	cookie, err := r.Cookie("session_token")
+	if err != nil {
+		return false
+	}
+	return h.authService.ValidateSessionToken(cookie.Value)
 }
