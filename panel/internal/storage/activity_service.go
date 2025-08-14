@@ -3,6 +3,7 @@ package storage
 import (
 	"database/sql"
 	"errors"	
+	"time"
 )
 
 // TODO: Move to model folder
@@ -86,10 +87,17 @@ func (s *activityService) AddActivity(activity *Activity) error {
 	if exists {
 		return errors.New("this activity already exists")
 	}
-	
-	_, err = s.db.Exec(`INSERT INTO activities (message_id, title) 
-      VALUES ($1 ,$2 ,$3)`, activity.MessageID, activity.Title)
 
+	var count int
+	if err := s.db.QueryRow(`SELECT COUNT(*) FROM activities`).Scan(&count); err != nil {
+		return err
+	}
+	newID := count + 1
+	_, err = s.db.Exec(
+		`INSERT INTO activities (id, message_id, title, created_at) 
+         VALUES ($1, $2, $3, $4)`,
+		newID, activity.MessageID, activity.Title, time.Now(),
+	)
 	return err
 }
 
