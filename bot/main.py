@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from bot.handlers import start, about , channel_posts , activity , forward_handler
+from bot.handlers import start, about , activity , forward_handler
 import telebot
 import os
 
@@ -10,7 +10,6 @@ bot = telebot.TeleBot(BOT_TOKEN, parse_mode="HTML")
 
 start.handle_start(bot)
 about.handle_about(bot)
-channel_posts.post_handler(bot)
 activity.activity_handler(bot)
 forward_handler.forward_handler(bot)
 
