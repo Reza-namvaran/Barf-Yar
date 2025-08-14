@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"net/http"
 	"github.com/Reza-namvaran/Barf-Yar/panel/internal/middleware"
+	"net/http"
 )
 
 // SetupRoutes configures all HTTP routes for the application
@@ -17,10 +17,12 @@ func SetupRoutes(handlers *Handlers) {
 
 	// Page routes
 	http.HandleFunc("/", handlers.LoginPage)
-	http.Handle("/dashboard", 
+	http.Handle("/dashboard",
 		middleware.AuthMiddleware(handlers.authService)(
 			http.HandlerFunc(handlers.Dashboard),
 		),
 	)
 	http.HandleFunc("/dashboard/activities", handlers.GetAllActivities)
+	http.HandleFunc("/dashboard/activities/add", handlers.AddActivityHandler)
+	http.HandleFunc("/dashboard/activities/delete/", handlers.DeleteActivityHandler)
 }
