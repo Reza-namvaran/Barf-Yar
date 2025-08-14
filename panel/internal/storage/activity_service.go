@@ -2,11 +2,10 @@ package storage
 
 import (
 	"database/sql"
-	"errors"
-	"time"
+	"errors"	
 )
 
-// TODO: Move to modele folder
+// TODO: Move to model folder
 type Activity struct {
 	ID        int    `json:"id"`
 	MessageID int64  `json:"message_id"`
@@ -76,27 +75,25 @@ func (s *activityService) CountActivities() (int, error) {
 }
 
 func (s *activityService) AddActivity(activity *Activity) error {
-	var existingID int
-	var existingMessageID int
-
+	var exists bool
 	err := s.db.QueryRow(
-		`SELECT id, message_id FROM activities WHERE id = $1 OR message_id = $2`,
-		activity.ID, activity.MessageID,
-	).Scan(&existingID, &existingMessageID)
-
-	if err == nil {
-		return errors.New("this activity already exist")
-	} else if err != sql.ErrNoRows {
+		`SELECT EXISTS(SELECT 1 FROM activities WHERE message_id = $1)`,
+		activity.MessageID,
+	).Scan(&exists)
+	if err != nil {
 		return err
 	}
-	_, err = s.db.Exec(`INSERT INTO activities (id, message_id, title, created_at) 
-      VALUES ($1 ,$2 ,$3, $4)`, activity.ID, activity.MessageID, activity.Title, time.Now())
+	if exists {
+		return errors.New("this activity already exists")
+	}
+	
+	_, err = s.db.Exec(`INSERT INTO activities (message_id, title) 
+      VALUES ($1 ,$2 ,$3)`, activity.MessageID, activity.Title)
 
 	return err
 }
 
 func (s *activityService) DeleteActivity(id int) error {
 	_, err := s.db.Exec(`DELETE FROM activities WHERE id = $1`, id)
-
 	return err
 }
