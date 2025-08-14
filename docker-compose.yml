@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    container_name: barfyar_db
+    env_file: .env
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/1_schema.sql
+      - ./db/seed.sql:/docker-entrypoint-initdb.d/2_seed.sql
+    ports:
+      - "5432:5432"
+
+  panel:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: barfyar_panel
+    depends_on:
+      - db
+    env_file:
+      - .env
+    ports:
+      - "${APP_PORT}:8080"
+
+volumes:
+  db_data:
