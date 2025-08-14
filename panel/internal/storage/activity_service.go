@@ -2,6 +2,8 @@ package storage
 
 import (
 	"database/sql"
+	"errors"
+	"time"
 )
 
 // TODO: Move to modele folder
@@ -19,8 +21,8 @@ type ActivityService interface {
 	GetActivityByID(id int) (*Activity, error)
 	GetAllActivities() ([]*Activity, error)
 	CountActivities() (int, error)
-	// AddActivity()
-	// DeleteActivity()
+	AddActivity(activity *Activity) error
+	DeleteActivity(id int) error
 }
 
 func NewActivityService(db *sql.DB) ActivityService {
@@ -71,4 +73,25 @@ func (s *activityService) CountActivities() (int, error) {
 		return 0, err
 	}
 	return count, nil
+}
+
+func (s *activityService) AddActivity(activity *Activity) error {
+	var existingID int
+	err := s.db.QueryRow(`SELECT id FROM activities WHERE message_id = $1, activity.MessageID`).Scan(&existingID)
+	if err == nil {
+		return errors.New("this activity already exist")
+	} else if err != sql.ErrNoRows {
+		return err
+	}
+	_, err = s.db.Exec(`INSERT INTO activities (id, message_id, title, created_at) 
+      VALUES ($1 ,$2 ,$3, $4)`, activity.ID, activity.MessageID, activity.Title, time.Now())
+
+	return err
+}
+
+func (s *activityService) DeleteActivity(id int) error {
+	_, err := s.db.Exec(`DELETE FROM (id, message_id, title, created_at) 
+      WHERE id = $1`, id)
+
+	return err
 }
