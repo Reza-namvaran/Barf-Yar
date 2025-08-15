@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Reza-namvaran/Barf-Yar/panel/internal/storage"
 	"github.com/Reza-namvaran/Barf-Yar/panel/internal/templates"
+	"github.com/Reza-namvaran/Barf-Yar/panel/internal/models"
 )
 
 func (h *Handlers) GetAllActivities(w http.ResponseWriter, r *http.Request) {
@@ -54,7 +54,7 @@ func (h *Handlers) AddActivityHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//==================================================================
-	var activity storage.Activity
+	var activity models.Activity
 
 	if err := json.NewDecoder(r.Body).Decode(&activity); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)

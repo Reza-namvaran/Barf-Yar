@@ -5,17 +5,12 @@ import (
 	"errors"
 
 	"github.com/Reza-namvaran/Barf-Yar/panel/internal/auth"
+	"github.com/Reza-namvaran/Barf-Yar/panel/internal/models"
 )
 
 type AdminService interface {
 	ValidateAdmin(username, password string) (bool, error)
-	GetAdminByUsername(username string) (*Admin, error)
-}
-
-type Admin struct {
-	ID           int    `json:"id"`
-	Username     string `json:"username"`
-	PasswordHash string `json:"-"`
+	GetAdminByUsername(username string) (*models.Admin, error)
 }
 
 type adminService struct {
@@ -25,7 +20,6 @@ type adminService struct {
 func NewAdminService(db *sql.DB) AdminService {
 	return &adminService{db: db}
 }
-
 
 func (s *adminService) ValidateAdmin(username, password string) (bool, error) {
 	admin, err := s.GetAdminByUsername(username)
@@ -39,8 +33,8 @@ func (s *adminService) ValidateAdmin(username, password string) (bool, error) {
 	return auth.CheckPasswordHash(password, admin.PasswordHash), nil
 }
 
-func (s *adminService) GetAdminByUsername(username string) (*Admin, error) {
-	admin := &Admin{}
+func (s *adminService) GetAdminByUsername(username string) (*models.Admin, error) {
+	admin := &models.Admin{}
 	err := s.db.QueryRow(`
 		SELECT id, username, password_hash 
 		FROM admins 

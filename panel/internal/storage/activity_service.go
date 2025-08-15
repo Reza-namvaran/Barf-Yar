@@ -3,24 +3,19 @@ package storage
 import (
 	"database/sql"
 	"errors"	
-)
 
-// TODO: Move to model folder
-type Activity struct {
-	ID        int    `json:"id"`
-	MessageID int64  `json:"message_id"`
-	Title     string `json:"title"`
-}
+	"github.com/Reza-namvaran/Barf-Yar/panel/internal/models"
+)
 
 type activityService struct {
 	db *sql.DB
 }
 
 type ActivityService interface {
-	GetActivityByID(id int) (*Activity, error)
-	GetAllActivities() ([]*Activity, error)
+	GetActivityByID(id int) (*models.Activity, error)
+	GetAllActivities() ([]*models.Activity, error)
 	CountActivities() (int, error)
-	AddActivity(activity *Activity) error
+	AddActivity(activity *models.Activity) error
 	DeleteActivity(id int) error
 }
 
@@ -28,8 +23,8 @@ func NewActivityService(db *sql.DB) ActivityService {
 	return &activityService{db: db}
 }
 
-func (s *activityService) GetActivityByID(id int) (*Activity, error) {
-	activity := &Activity{}
+func (s *activityService) GetActivityByID(id int) (*models.Activity, error) {
+	activity := &models.Activity{}
 	err := s.db.QueryRow(`
 		SELECT id, message_id, title 
 		FROM activities 
@@ -42,7 +37,7 @@ func (s *activityService) GetActivityByID(id int) (*Activity, error) {
 	return activity, nil
 }
 
-func (s *activityService) GetAllActivities() ([]*Activity, error) {
+func (s *activityService) GetAllActivities() ([]*models.Activity, error) {
 	rows, err := s.db.Query(`
 		SELECT id, message_id, title
 		FROM activities
@@ -52,9 +47,9 @@ func (s *activityService) GetAllActivities() ([]*Activity, error) {
 		return nil, err
 	}
 	defer rows.Close()
-	var allActivities []*Activity
+	var allActivities []*models.Activity
 	for rows.Next() {
-		a := &Activity{}
+		a := &models.Activity{}
 		err = rows.Scan(&a.ID, &a.MessageID, &a.Title)
 		if err != nil {
 			return nil, err
@@ -74,7 +69,7 @@ func (s *activityService) CountActivities() (int, error) {
 	return count, nil
 }
 
-func (s *activityService) AddActivity(activity *Activity) error {
+func (s *activityService) AddActivity(activity *models.Activity) error {
 	var exists bool
 	err := s.db.QueryRow(
 		`SELECT EXISTS(SELECT 1 FROM activities WHERE message_id = $1)`,
