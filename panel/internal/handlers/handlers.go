@@ -6,18 +6,18 @@ import (
 	"time"
 
 	"github.com/Reza-namvaran/Barf-Yar/panel/internal/auth"
-	"github.com/Reza-namvaran/Barf-Yar/panel/internal/storage"
+    "github.com/Reza-namvaran/Barf-Yar/panel/internal/service"
 	"github.com/Reza-namvaran/Barf-Yar/panel/internal/templates"
 )
 
 type Handlers struct {
 	authService     auth.Service
-	adminService    storage.AdminService
-	activityService storage.ActivityService
+	adminService    service.AdminService
+	activityService service.ActivityService
 	templateService *templates.TemplateService
 }
 
-func NewHandlers(authService auth.Service, adminService storage.AdminService, activityService storage.ActivityService, templateService *templates.TemplateService) *Handlers {
+func NewHandlers(authService auth.Service, adminService service.AdminService, activityService service.ActivityService, templateService *templates.TemplateService) *Handlers {
 	return &Handlers{
 		authService:     authService,
 		adminService:    adminService,
