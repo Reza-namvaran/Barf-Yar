@@ -27,8 +27,8 @@ func SetupRoutes(handlers *Handlers) *mux.Router {
 	
 	activities := dashBoard.PathPrefix("/activities").Subrouter()
 	activities.HandleFunc("", handlers.GetAllActivities).Methods("Get")
-	activities.HandleFunc("/add", handlers.AddActivityHandler).Methods("Post")
-	activities.HandleFunc("/delete/{id}", handlers.DeleteActivityHandler).Methods("Post")
+	activities.HandleFunc("/", handlers.AddActivityHandler).Methods("Post")
+	activities.HandleFunc("/{id}", handlers.DeleteActivityHandler).Methods("Delete")
 
 	// Page routes
 	new_router.PathPrefix("/").HandlerFunc(handlers.LoginPage).Methods("Get")

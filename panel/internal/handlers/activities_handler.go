@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
-	"strings"
+	_ "strings"
 
-	"github.com/Reza-namvaran/Barf-Yar/panel/internal/templates"
 	"github.com/Reza-namvaran/Barf-Yar/panel/internal/models"
+	"github.com/Reza-namvaran/Barf-Yar/panel/internal/templates"
+	"github.com/gorilla/mux"
 )
 
 func (h *Handlers) GetAllActivities(w http.ResponseWriter, r *http.Request) {
@@ -48,12 +49,15 @@ func (h *Handlers) AddActivityHandler(w http.ResponseWriter, r *http.Request) {
 
 // delete
 func (h *Handlers) DeleteActivityHandler(w http.ResponseWriter, r *http.Request) {
-	idStr := strings.TrimPrefix(r.URL.Path[len("/dashboard/activities/delete"):], "/")
+	vars := mux.Vars(r)
+	idStr := vars["id"]
+
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		http.Error(w, "Invalid ID", http.StatusInternalServerError)
 		return
 	}
+	
 	if err := h.activityService.DeleteActivity(id); err != nil {
 		http.Error(w, "faild to delete activity", http.StatusInternalServerError)
 		return
