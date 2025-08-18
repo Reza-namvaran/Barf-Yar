@@ -11,11 +11,6 @@ import (
 )
 
 func (h *Handlers) GetAllActivities(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	activities, err := h.activityService.GetAllActivities()
 	if err != nil {
 		http.Error(w, "Failed to fetch activities", http.StatusInternalServerError)
@@ -36,11 +31,6 @@ func (h *Handlers) GetAllActivities(w http.ResponseWriter, r *http.Request) {
 
 // add
 func (h *Handlers) AddActivityHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	var activity models.Activity
 
 	if err := json.NewDecoder(r.Body).Decode(&activity); err != nil {
@@ -58,12 +48,6 @@ func (h *Handlers) AddActivityHandler(w http.ResponseWriter, r *http.Request) {
 
 // delete
 func (h *Handlers) DeleteActivityHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-
 	idStr := strings.TrimPrefix(r.URL.Path[len("/dashboard/activities/delete"):], "/")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {

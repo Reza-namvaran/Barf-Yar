@@ -17,21 +17,21 @@ func SetupRoutes(handlers *Handlers) *mux.Router {
 
 	// API routes
 	api := new_router.PathPrefix("/api").Subrouter()
-	api.HandleFunc("/login", handlers.Login)
-	api.HandleFunc("/logout", handlers.Logout)
+	api.HandleFunc("/login", handlers.Login).Methods("Post")
+	api.HandleFunc("/logout", handlers.Logout).Methods("Post")
 	
 	// Dashboard routs
 	dashBoard := new_router.PathPrefix("/dashboard").Subrouter()
 	dashBoard.Use(middleware.AuthMiddleware(handlers.authService))
-	dashBoard.HandleFunc("", handlers.Dashboard)
+	dashBoard.HandleFunc("", handlers.Dashboard).Methods("Get")
 	
 	activities := dashBoard.PathPrefix("/activities").Subrouter()
-	activities.HandleFunc("", handlers.GetAllActivities)
-	activities.HandleFunc("/add", handlers.AddActivityHandler)
-	activities.HandleFunc("/delete/{id}", handlers.DeleteActivityHandler)
+	activities.HandleFunc("", handlers.GetAllActivities).Methods("Get")
+	activities.HandleFunc("/add", handlers.AddActivityHandler).Methods("Post")
+	activities.HandleFunc("/delete/{id}", handlers.DeleteActivityHandler).Methods("Post")
 
 	// Page routes
-	new_router.PathPrefix("/").HandlerFunc(handlers.LoginPage)
+	new_router.PathPrefix("/").HandlerFunc(handlers.LoginPage).Methods("Get")
 
 	return new_router
 }
