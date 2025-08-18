@@ -8,13 +8,27 @@ import (
     "strings"
     "syscall"
 
-    "github.com/joho/godotenv"
+    "database/sql"
+    _ "github.com/lib/pq"
     "golang.org/x/term"
-    "github.com/Reza-namvaran/Barf-Yar/panel/internal/storage"
+    "github.com/joho/godotenv"
+    "github.com/Reza-namvaran/Barf-Yar/panel/internal/repository"
+    "github.com/Reza-namvaran/Barf-Yar/panel/internal/service"
 )
 
 func main() {
     _ = godotenv.Load()
+
+    dbURL := os.Getenv("DATABASE_URL")
+    if dbURL == "" {
+        log.Fatal("DATABASE_URL not set")
+    }
+
+    db, err := sql.Open("postgres", dbURL)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
 
     reader := bufio.NewReader(os.Stdin)
 
@@ -43,7 +57,10 @@ func main() {
         log.Fatal("Username and password cannot be empty")
     }
 
-    if err := storage.CreateAdmin(username, password); err != nil {
+    adminRepo := repository.NewAdminRepository(db)
+    adminService := service.NewAdminService(adminRepo)
+
+    if err := adminService.CreateAdmin(username, password); err != nil {
         log.Fatalf("Failed to create admin: %v", err)
     }
 
