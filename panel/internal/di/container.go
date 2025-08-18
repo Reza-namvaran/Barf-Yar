@@ -5,7 +5,6 @@ import (
 	"log"
 	"sync"
 
-	"github.com/Reza-namvaran/Barf-Yar/panel/internal/auth"
 	"github.com/Reza-namvaran/Barf-Yar/panel/internal/handlers"
 	"github.com/Reza-namvaran/Barf-Yar/panel/internal/repository"
 	"github.com/Reza-namvaran/Barf-Yar/panel/internal/service"
@@ -21,7 +20,7 @@ type Container struct {
 	activityRepo repository.ActivityRepository
 
 	// Services
-	authService     auth.Service
+	authService     service.AuthService
 	adminService    service.AdminService
 	activityService service.ActivityService
 
@@ -68,17 +67,14 @@ func (c *Container) GetActivityRepository() repository.ActivityRepository {
 }
 
 // --- Services ---
-func (c *Container) GetAuthService() auth.Service {
-
-	if c.authService != nil {
-		return c.authService
-	}
-	
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	c.authService = auth.NewService()
-	log.Printf("After auth")	
-	return c.authService
+func (c *Container) GetAuthService() service.AuthService {
+    c.mu.Lock()
+    defer c.mu.Unlock()
+    if c.authService == nil {
+        repo := repository.NewSessionRepository(c.db)
+        c.authService = service.NewAuthService(repo)
+    }
+    return c.authService
 }
 
 func (c *Container) GetAdminService() service.AdminService {
