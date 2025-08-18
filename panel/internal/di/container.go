@@ -69,58 +69,50 @@ func (c *Container) GetActivityRepository() repository.ActivityRepository {
 
 // --- Services ---
 func (c *Container) GetAuthService() auth.Service {
+
+	if c.authService != nil {
+		return c.authService
+	}
+	
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	if c.authService == nil {
-		c.authService = auth.NewService()
-	}
-
-	log.Printf("After auth")
+	c.authService = auth.NewService()
+	log.Printf("After auth")	
 	return c.authService
 }
+
 func (c *Container) GetAdminService() service.AdminService {
-    c.mu.RLock()
     if c.adminService != nil {
-        defer c.mu.RUnlock()
         return c.adminService
     }
-    c.mu.RUnlock()
 
-    // build service outside lock to avoid deadlock
-    repo := c.GetAdminRepository()
-    newService := service.NewAdminService(repo)
+     repo := c.GetAdminRepository()
 
     c.mu.Lock()
     defer c.mu.Unlock()
-    if c.adminService == nil { // double-check in case of race
-        c.adminService = newService
+    if c.adminService == nil {
+        c.adminService = service.NewAdminService(repo)
+        log.Printf("After admin")
     }
-
-	log.Printf("After admin")
     return c.adminService
 }
 
 func (c *Container) GetActivityService() service.ActivityService {
-    c.mu.RLock()
     if c.activityService != nil {
-        defer c.mu.RUnlock()
         return c.activityService
     }
-    c.mu.RUnlock()
 
-    // build service outside lock to avoid deadlock
     repo := c.GetActivityRepository()
-    newService := service.NewActivityService(repo)
 
     c.mu.Lock()
     defer c.mu.Unlock()
-    if c.activityService == nil { // double-check in case of race
-        c.activityService = newService
+    if c.activityService == nil {
+        c.activityService = service.NewActivityService(repo)
+        log.Printf("After activity")
     }
-
-	log.Printf("After activity")
     return c.activityService
 }
+
 
 // --- Template ---
 func (c *Container) GetTemplateService() *templates.TemplateService {
