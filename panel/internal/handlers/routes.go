@@ -2,27 +2,36 @@ package handlers
 
 import (
 	"github.com/Reza-namvaran/Barf-Yar/panel/internal/middleware"
+    "github.com/gorilla/mux"
 	"net/http"
 )
 
 // SetupRoutes configures all HTTP routes for the application
-func SetupRoutes(handlers *Handlers) {
+func SetupRoutes(handlers *Handlers) *mux.Router {
+
+	new_router := mux.NewRouter()
+
 	// Static file serving
 	fs := http.FileServer(http.Dir("static"))
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
+	new_router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
 
 	// API routes
-	http.HandleFunc("/api/login", handlers.Login)
-	http.HandleFunc("/api/logout", handlers.Logout)
+	api := new_router.PathPrefix("/api").Subrouter()
+	api.HandleFunc("/login", handlers.Login)
+	api.HandleFunc("/logout", handlers.Logout)
+	
+	// Dashboard routs
+	dashBoard := new_router.PathPrefix("/dashboard").Subrouter()
+	dashBoard.Use(middleware.AuthMiddleware(handlers.authService))
+	dashBoard.HandleFunc("", handlers.Dashboard)
+	
+	activities := dashBoard.PathPrefix("/activities").Subrouter()
+	activities.HandleFunc("", handlers.GetAllActivities)
+	activities.HandleFunc("/add", handlers.AddActivityHandler)
+	activities.HandleFunc("/delete/{id}", handlers.DeleteActivityHandler)
 
 	// Page routes
-	http.HandleFunc("/", handlers.LoginPage)
-	http.Handle("/dashboard",
-		middleware.AuthMiddleware(handlers.authService)(
-			http.HandlerFunc(handlers.Dashboard),
-		),
-	)
-	http.HandleFunc("/dashboard/activities", handlers.GetAllActivities)
-	http.HandleFunc("/dashboard/activities/add", handlers.AddActivityHandler)
-	http.HandleFunc("/dashboard/activities/delete/", handlers.DeleteActivityHandler)
+	new_router.PathPrefix("/").HandlerFunc(handlers.LoginPage)
+
+	return new_router
 }

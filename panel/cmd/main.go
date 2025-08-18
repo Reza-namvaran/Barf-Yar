@@ -36,8 +36,10 @@ func main() {
 
 	app_handlers := container.GetHandlers()
 
-	handlers.SetupRoutes(app_handlers)
+	
+
+	routes := handlers.SetupRoutes(app_handlers)
 
 	log.Printf("Server starting on port %s", config.ServerPort)
-	log.Fatal(http.ListenAndServe(":"+config.ServerPort, nil))
+	log.Fatal(http.ListenAndServe(":"+config.ServerPort, routes))
 }

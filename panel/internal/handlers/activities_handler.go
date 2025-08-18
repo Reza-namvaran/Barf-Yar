@@ -16,13 +16,6 @@ func (h *Handlers) GetAllActivities(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO Replace with middleware
-	if !h.authenticate(r) {
-		http.Error(w, "Unauthorized", http.StatusInternalServerError)
-		return
-	}
-	//==================================================================
-
 	activities, err := h.activityService.GetAllActivities()
 	if err != nil {
 		http.Error(w, "Failed to fetch activities", http.StatusInternalServerError)
@@ -48,12 +41,6 @@ func (h *Handlers) AddActivityHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO Replace with middleware
-	if !h.authenticate(r) {
-		http.Error(w, "Unauthorized", http.StatusInternalServerError)
-		return
-	}
-	//==================================================================
 	var activity models.Activity
 
 	if err := json.NewDecoder(r.Body).Decode(&activity); err != nil {
@@ -76,12 +63,6 @@ func (h *Handlers) DeleteActivityHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	// TODO Replace with middleware
-	if !h.authenticate(r) {
-		http.Error(w, "Unauthorized", http.StatusInternalServerError)
-		return
-	}
-	//==================================================================
 
 	idStr := strings.TrimPrefix(r.URL.Path[len("/dashboard/activities/delete"):], "/")
 	id, err := strconv.Atoi(idStr)
@@ -95,13 +76,4 @@ func (h *Handlers) DeleteActivityHandler(w http.ResponseWriter, r *http.Request)
 	}
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{"message": "activity deleted successfully"})
-}
-
-// helper function for authentication
-func (h *Handlers) authenticate(r *http.Request) bool {
-	cookie, err := r.Cookie("session_token")
-	if err != nil {
-		return false
-	}
-	return h.authService.ValidateSessionToken(cookie.Value)
 }
