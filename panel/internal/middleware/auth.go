@@ -2,10 +2,10 @@ package middleware
 
 import (
 	"net/http"
-	"github.com/Reza-namvaran/Barf-Yar/panel/internal/auth"
+	"github.com/Reza-namvaran/Barf-Yar/panel/internal/service"
 )
 
-func AuthMiddleware(authService auth.Service) func(http.Handler) http.Handler {
+func AuthMiddleware(authService service.AuthService) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			cookie, err := r.Cookie("session_token")

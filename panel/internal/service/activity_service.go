@@ -36,7 +36,7 @@ func (serv *activityService) CountActivities() (int, error) {
 
 func (serv *activityService) AddActivity(activity *models.Activity) error {
 	// Business rule: no duplicate message_id
-	exists, _ := serv.repo.ExistsByID(activity.ID)
+	exists, _ := serv.repo.ExistsByMessageID(activity.ID)
 
 	if exists {
 		return errors.New("This activity already exists")

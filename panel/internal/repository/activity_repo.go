@@ -13,7 +13,7 @@ type ActivityRepository interface {
 	Insert(activity *models.Activity) error
 	Delete(id int) error
 	Count() (int, error)
-	ExistsByID(id int) (bool, error)
+	ExistsByMessageID(id int) (bool, error)
 }
 
 type activityRepo struct {
@@ -86,7 +86,7 @@ func (repo *activityRepo) Count() (int, error) {
 	return count, nil
 }
 
-func (repo *activityRepo) ExistsByID(id int) (bool, error) {
+func (repo *activityRepo) ExistsByMessageID(id int) (bool, error) {
 	var exists bool
 	err := repo.db.QueryRow(`
 	SELECT EXISTS(SELECT 1 FROM activities WHERE message_id = $1)`,

@@ -5,19 +5,18 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Reza-namvaran/Barf-Yar/panel/internal/auth"
     "github.com/Reza-namvaran/Barf-Yar/panel/internal/service"
 	"github.com/Reza-namvaran/Barf-Yar/panel/internal/templates"
 )
 
 type Handlers struct {
-	authService     auth.Service
+	authService     service.AuthService
 	adminService    service.AdminService
 	activityService service.ActivityService
 	templateService *templates.TemplateService
 }
 
-func NewHandlers(authService auth.Service, adminService service.AdminService, activityService service.ActivityService, templateService *templates.TemplateService) *Handlers {
+func NewHandlers(authService service.AuthService, adminService service.AdminService, activityService service.ActivityService, templateService *templates.TemplateService) *Handlers {
 	return &Handlers{
 		authService:     authService,
 		adminService:    adminService,
@@ -38,11 +37,6 @@ type LoginResponse struct {
 }
 
 func (h *Handlers) Login(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	var req LoginRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
@@ -94,11 +88,6 @@ func (h *Handlers) Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handlers) LoginPage(w http.ResponseWriter, req *http.Request) {
-	if req.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	w.Header().Set("Content-Type", "text/html")
 	data := templates.TemplateData{
 		Title: "Admin Login",
