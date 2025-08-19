@@ -4,11 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ .Title }}</title>
+    <style>
+        .hidden { display: none; }
+    </style>
 </head>
 <body>
     <h1>{{ .Title }}</h1>
 
-    <table>
+    <table border="1" cellpadding="6">
         <thead>
             <tr>
                 <th>ID</th>
@@ -20,20 +23,19 @@
         </thead>
         <tbody>
         {{ range .Data }}
-            <tr>
+            <tr id="row-{{ .ID }}">
                 <td>{{ .ID }}</td>
-                <td>{{ .MessageID }}</td>
-                <td>{{ .Title }}</td>
-                <td>{{ if .PromptMessageID }}{{ .PromptMessageID }}{{ else }}—{{ end }}</td>
+                <td class="view">{{ .MessageID }}</td>
+                <td class="view">{{ .Title }}</td>
+                <td class="view">{{ if .PromptMessageID }}{{ .PromptMessageID }}{{ else }}—{{ end }}</td>
                 <td>
-                    <form method="post" action="/dashboard/activities/{{ .ID }}" onsubmit="deleteActivity(`{{ .ID }}`); return false;" style="display:inline;">
-                        <button type="submit" class="delete-btn">Delete</button>
-                    </form>
+                    <button onclick="toggleEdit(`{{ .ID }}`)">Edit</button>
+                    <button onclick="deleteActivity(`{{ .ID }}`)">Delete</button>
                 </td>
             </tr>
         {{ else }}
             <tr>
-                <td colspan="4">No activities found.</td>
+                <td colspan="5">No activities found.</td>
             </tr>
         {{ end }}
         </tbody>
@@ -50,32 +52,7 @@
         <button type="submit">Add</button>
     </form>
 
-    <script>
-        document.getElementById('addForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = {
-                id: parseInt(this.id.value),
-                message_id: parseInt(this.message_id.value),
-                title: this.title.value,
-                prompt_message_id: this.prompt_message_id.value ? parseInt(this.prompt_message_id.value) : null
-            };
-            fetch(this.action, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            }).then(res => {
-                if (res.ok) location.reload();
-                else res.text().then(alert);
-            });
-        });
-
-        function deleteActivity(id) {
-            fetch(`/dashboard/activities/${id}`, { method: 'DELETE' }).then(res => {
-                if (res.ok) location.reload();
-                else res.text().then(alert);
-            });
-        }
-    </script>
+    <script src="/static/js/activity.js"></script>
 </body>
 </html>
 {{ end }}
