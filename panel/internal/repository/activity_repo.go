@@ -39,18 +39,18 @@ func (repo *activityRepo) GetByID(id int) (*models.Activity, error) {
 
 func (repo *activityRepo) GetAll() ([]*models.Activity, error) {
 	rows, err := repo.db.Query(`
-	SELECT id, message_id, title FROM activities
-	ORDER BY id ASC`)
-
+		SELECT a.id, a.message_id, a.title FROM activities a
+		LEFT JOIN activity_prompts ap ON a.id = ap.activity_id
+		ORDER BY a.id ASC`)
 	if err != nil {
 		return nil, errors.New("Failed to fetch all activities")
 	}
-
 	defer rows.Close()
+	
 	var allActivities []*models.Activity
 	for rows.Next() {
 		activity := &models.Activity{}
-		err = rows.Scan(&activity.ID, &activity.MessageID, &activity.Title)
+		err = rows.Scan(&activity.ID, &activity.MessageID, &activity.Title, &activity.PromptMessageID)
 		if err != nil {
 			return nil, errors.New("Failed to create activity")
 		}
@@ -106,7 +106,7 @@ func (repo *activityRepo) Count() (int, error) {
 func (repo *activityRepo) ExistsByMessageID(id int) (bool, error) {
 	var exists bool
 	err := repo.db.QueryRow(`
-	SELECT EXISTS(SELECT 1 FROM activities WHERE message_id = $1)`,
+		SELECT EXISTS(SELECT 1 FROM activities WHERE message_id = $1)`,
 	id,).Scan(&exists)
 
 	if err != nil {
