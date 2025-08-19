@@ -5,6 +5,7 @@ go 1.24.5
 require (
 	github.com/gorilla/mux v1.8.1
 	github.com/joho/godotenv v1.5.1
+	github.com/jung-kurt/gofpdf v1.16.2
 	github.com/lib/pq v1.10.9
 	golang.org/x/crypto v0.40.0
 	golang.org/x/term v0.33.0
