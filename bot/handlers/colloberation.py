@@ -30,7 +30,6 @@ def collaboration_handler(bot):
 def get_collaboration_menu(activity_id):
     keyboard = InlineKeyboardMarkup()
     keyboard.row(
-        InlineKeyboardButton("Join Collaboration", callback_data=f"collab_join_{activity_id}"),
-        InlineKeyboardButton("View Collaborators", callback_data=f"collab_view_{activity_id}")
+        InlineKeyboardButton("Join Collaboration", callback_data=f"collab_join_{activity_id}")
     )
     return keyboard
