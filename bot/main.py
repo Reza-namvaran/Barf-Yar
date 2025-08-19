@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from bot.handlers import start, about , activity , forward_handler
+from bot.handlers import start, about , activity , forward_handler , colloberation
 import telebot
 import os
 
@@ -12,6 +12,8 @@ start.handle_start(bot)
 about.handle_about(bot)
 activity.activity_handler(bot)
 forward_handler.forward_handler(bot)
+colloberation.collaboration_handler(bot)
+
 
 print("Bot is running")
 bot.infinity_polling()
