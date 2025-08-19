@@ -47,6 +47,22 @@ func (h *Handlers) AddActivityHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// update
+func (h *Handlers) UpdateActivityHandler(w http.ResponseWriter, r *http.Request) {
+	var activity models.Activity
+	if err := json.NewDecoder(r.Body).Decode(&activity); err != nil {
+		http.Error(w, "invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	if err := h.activityService.UpdateActivity(&activity); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+	}
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(map[string]string{"message": "activity updated successfully"})
+}
+
 // delete
 func (h *Handlers) DeleteActivityHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
