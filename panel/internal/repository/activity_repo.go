@@ -28,16 +28,24 @@ func NewActivityRepository(db *sql.DB) ActivityRepository {
 }
 
 func (repo *activityRepo) GetByID(id int) (*models.Activity, error) {
-	activity := &models.Activity{}
-	err := repo.db.QueryRow(`
-		SELECT id, message_id, title FROM activities
-		WHERE id = $1`, id).Scan(activity)
+    activity := &models.Activity{}
+    err := repo.db.QueryRow(`
+        SELECT id, message_id, title FROM activities
+        WHERE id = $1`, id).Scan(
+            &activity.ID,
+            &activity.MessageID,
+            &activity.Title,
+        )
 
-	if err != nil {
-		return nil, errors.New("Failed to fetch activity")
-	}
-	return activity, err
+    if err != nil {
+        if err == sql.ErrNoRows {
+            return nil, nil 
+        }
+        return nil, errors.New("failed to fetch activity")
+    }
+    return activity, nil
 }
+
 
 func (repo *activityRepo) GetAll() ([]*models.Activity, error) {
 	rows, err := repo.db.Query(`
