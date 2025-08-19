@@ -12,6 +12,8 @@ type ActivityRepository interface {
 	GetAll() ([]*models.Activity, error)
 	Insert(activity *models.Activity) (int, error)
 	LinkSupportPrompt(activityID, supportPromptID int) error
+	RemoveSupportPrompt(activityID int) error
+	Update(activity *models.Activity) error 
 	Delete(id int) error
 	Count() (int, error)
 	ExistsByMessageID(id int) (bool, error)
@@ -83,6 +85,38 @@ func (repo *activityRepo) LinkSupportPrompt(activityID, supportPromptID int) err
 	
 	if err != nil {
 		return errors.New("Could not link prompt to activity")
+	}
+
+	return nil
+}
+
+func (repo *activityRepo) RemoveSupportPrompt(activityID int) error {
+	_, err := repo.db.Exec(`DELETE FROM activity_prompts WHERE activity_id = $1`, activityID)
+	if err != nil {
+		return errors.New("Could not remove prompt link from activity")
+	}
+
+	return nil
+}
+
+func (repo *activityRepo) Update(activity *models.Activity) error {
+	_, err := repo.db.Exec(`
+		UPDATE activities
+        SET message_id = $1, title = $2
+        WHERE id = $3
+		`, activity.MessageID, activity.Title, activity.ID)
+	
+	if err != nil {
+		return errors.New("failed to update activity")
+	}
+
+	if activity.PromptMessageID != nil {
+        return repo.LinkSupportPrompt(activity.ID, *activity.PromptMessageID)
+    } else {
+		err = repo.RemoveSupportPrompt(activity.ID)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil

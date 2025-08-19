@@ -11,6 +11,7 @@ type ActivityService interface {
 	GetAllActivities() ([]*models.Activity, error)
 	CountActivities() (int, error)
 	AddActivity(activity *models.Activity) error
+	UpdateActivity(activity *models.Activity) error
 	DeleteActivity(id int) error
 }
 
@@ -55,6 +56,15 @@ func (serv *activityService) AddActivity(activity *models.Activity) error {
 
 	return nil
 }
+
+func (serv *activityService) UpdateActivity(activity *models.Activity) error {
+    exists, _ := serv.repo.GetByID(activity.ID)
+    if exists != nil {
+        return errors.New("activity not found")
+    }
+    return serv.repo.Update(activity)
+}
+
 
 func (serv *activityService) DeleteActivity(id int) error {
 	if err := serv.repo.Delete(id); err != nil {
