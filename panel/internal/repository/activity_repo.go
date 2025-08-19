@@ -39,7 +39,7 @@ func (repo *activityRepo) GetByID(id int) (*models.Activity, error) {
 
 func (repo *activityRepo) GetAll() ([]*models.Activity, error) {
 	rows, err := repo.db.Query(`
-		SELECT a.id, a.message_id, a.title FROM activities a
+		SELECT a.id, a.message_id, a.title, ap.prompt_message_id FROM activities a
 		LEFT JOIN activity_prompts ap ON a.id = ap.activity_id
 		ORDER BY a.id ASC`)
 	if err != nil {
