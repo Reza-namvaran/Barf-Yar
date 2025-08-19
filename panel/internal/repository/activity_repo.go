@@ -10,7 +10,8 @@ import (
 type ActivityRepository interface {
 	GetByID(id int) (*models.Activity, error)
 	GetAll() ([]*models.Activity, error)
-	Insert(activity *models.Activity) error
+	Insert(activity *models.Activity) (int, error)
+	LinkSupportPrompt(activityID, supportPromptID int) error
 	Delete(id int) error
 	Count() (int, error)
 	ExistsByMessageID(id int) (bool, error)
@@ -60,12 +61,28 @@ func (repo *activityRepo) GetAll() ([]*models.Activity, error) {
 	return allActivities, nil
 }
 
-func (repo *activityRepo) Insert(activity *models.Activity) error {
-	_, err := repo.db.Exec(`
-	INSERT INTO activities (message_id, title)
-	VALUES ($1, $2)`, activity.MessageID, activity.Title)
+func (repo *activityRepo) Insert(activity *models.Activity) (int, error) {
+	var id int
+	err := repo.db.QueryRow(`
+		INSERT INTO activities (message_id, title)
+		VALUES ($1, $2)
+		RETURNING id`, activity.MessageID, activity.Title).Scan(&id)
 	if err != nil {
-		return errors.New("Could not save activity")
+		return 0, errors.New("Could not save activity")
+	}
+
+	return id, nil
+}
+
+func (repo *activityRepo) LinkSupportPrompt(activityID, supportPromptID int) error {
+	_, err := repo.db.Exec(`
+		INSERT INTO activity_prompts (activity_id, prompt_message_id)
+		VALUES($1, $2)
+		ON CONFLICT (activity_id) DO UPDATE
+		SET prompt_message_id = EXCLUDED.prompt_message_id`, activityID, supportPromptID)
+	
+	if err != nil {
+		return errors.New("Could not link prompt to activity")
 	}
 
 	return nil
