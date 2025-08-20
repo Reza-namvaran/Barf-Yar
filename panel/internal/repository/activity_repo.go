@@ -28,15 +28,42 @@ func NewActivityRepository(db *sql.DB) ActivityRepository {
 }
 
 func (repo *activityRepo) GetByID(id int) (*models.Activity, error) {
-	activity := &models.Activity{}
-	err := repo.db.QueryRow(`
-		SELECT id, message_id, title FROM activities
-		WHERE id = $1`, id).Scan(activity)
+    rows, err := repo.db.Query(`
+        SELECT a.id, a.message_id, a.title, ap.prompt_message_id FROM activities a
+        LEFT JOIN activity_prompts ap ON a.id = ap.activity_id
+        WHERE a.id = $1`, id)
 
-	if err != nil {
-		return nil, errors.New("Failed to fetch activity")
-	}
-	return activity, err
+    if err != nil {
+        return nil, errors.New("failed to fetch activity")
+    }
+    defer rows.Close()
+
+    activity := &models.Activity{}
+    found := false
+
+    for rows.Next() {
+        found = true
+        err := rows.Scan(
+            &activity.ID,
+            &activity.MessageID,
+            &activity.Title,
+            &activity.PromptMessageID,
+        )
+        if err != nil {
+            return nil, errors.New("failed to scan activity data")
+        }
+        break
+    }
+
+    if err = rows.Err(); err != nil {
+        return nil, errors.New("error iterating through rows")
+    }
+
+    if !found {
+        return nil, nil
+    }
+
+    return activity, nil
 }
 
 func (repo *activityRepo) GetAll() ([]*models.Activity, error) {

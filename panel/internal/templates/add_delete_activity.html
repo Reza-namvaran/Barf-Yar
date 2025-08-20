@@ -31,6 +31,7 @@
                 <td>
                     <button onclick="toggleEdit(`{{ .ID }}`)">Edit</button>
                     <button onclick="deleteActivity(`{{ .ID }}`)">Delete</button>
+                    <a href="/dashboard/activities/{{.ID}}/supporters" class="btn btn-view">Show Supporters</a>
                 </td>
             </tr>
         {{ else }}
