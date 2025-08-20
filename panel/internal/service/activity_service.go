@@ -59,7 +59,7 @@ func (serv *activityService) AddActivity(activity *models.Activity) error {
 
 func (serv *activityService) UpdateActivity(activity *models.Activity) error {
     exists, _ := serv.repo.GetByID(activity.ID)
-    if exists != nil {
+    if exists == nil {
         return errors.New("activity not found")
     }
     return serv.repo.Update(activity)
