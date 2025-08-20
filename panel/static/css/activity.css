@@ -110,7 +110,17 @@ body {
     background: #4cafef;
     color: white;
 }
-  
+
+.btn-save {
+    background: #2ecc71;
+    color: white;
+}
+
+.btn-cancel {
+    background: #ccc;
+    color: #555;
+}
+
 .btn-delete {
     background: #e74c3c;
     color: white;

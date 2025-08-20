@@ -46,8 +46,8 @@ function toggleEdit(id) {
 
   // Replace actions with Save/Cancel
   cells[4].innerHTML = `
-    <button class="btn btn-primary" onclick="saveEdit(${id})">Save</button>
-    <button class="btn" onclick="location.reload()">Cancel</button>
+    <button class="btn btn-save" onclick="saveEdit(${id})">Save</button>
+    <button class="btn btn-cancel" onclick="location.reload()">Cancel</button>
   `;
 }
 
