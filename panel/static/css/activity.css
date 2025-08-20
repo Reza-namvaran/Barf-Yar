@@ -147,3 +147,19 @@ form input {
     border: 1px solid #ccc;
 }
   
+.actions-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+  
+.btn-back {
+    background: #ccc;
+    color: #333;
+}
+  
+.export-buttons a {
+    margin-left: 10px;
+}
+  
