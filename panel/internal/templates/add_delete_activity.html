@@ -2,58 +2,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>{{ .Title }}</title>
-    <style>
-        .hidden { display: none; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{.Title}}</title>
+  <link rel="stylesheet" href="/static/css/activity.css">
 </head>
 <body>
-    <h1>{{ .Title }}</h1>
+  <div class="admin-container">
 
-    <table border="1" cellpadding="6">
-        <thead>
+    <aside class="sidebar">
+      <h2 class="sidebar-title">Admin Panel</h2>
+      <nav class="sidebar-nav">
+        <a href="/dashboard" class="nav-link">Dashboard</a>
+        <a href="/dashboard/activities" class="nav-link active">Activities</a>
+        <a href="/api/logout" class="nav-link logout">Logout</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>Activities</h1>
+      </header>
+
+      <section class="card">
+        <table class="activity-table">
+          <thead>
             <tr>
-                <th>ID</th>
-                <th>Message ID</th>
-                <th>Title</th>
-                <th>Prompt ID</th>
-                <th>Actions</th>
+              <th>ID</th>
+              <th>Message ID</th>
+              <th>Title</th>
+              <th>Prompt ID</th>
+              <th>Actions</th>
             </tr>
-        </thead>
-        <tbody>
-        {{ range .Data }}
+          </thead>
+          <tbody>
+            {{ range .Data }}
             <tr id="row-{{ .ID }}">
-                <td>{{ .ID }}</td>
-                <td class="view">{{ .MessageID }}</td>
-                <td class="view">{{ .Title }}</td>
-                <td class="view">{{ if .PromptMessageID }}{{ .PromptMessageID }}{{ else }}—{{ end }}</td>
-                <td>
-                    <button onclick="toggleEdit(`{{ .ID }}`)">Edit</button>
-                    <button onclick="deleteActivity(`{{ .ID }}`)">Delete</button>
-                    <a href="/dashboard/activities/{{.ID}}/supporters" class="btn btn-view">Show Supporters</a>
-                </td>
+              <td>{{ .ID }}</td>
+              <td class="view">{{ .MessageID }}</td>
+              <td class="view">{{ .Title }}</td>
+              <td class="view">{{ if .PromptMessageID }}{{ .PromptMessageID }}{{ else }}—{{ end }}</td>
+              <td>
+                <button class="btn btn-edit" onclick="toggleEdit(`{{ .ID }}`)">Edit</button>
+                <button class="btn btn-delete" onclick="deleteActivity(`{{ .ID }}`)">Delete</button>
+                <a href="/dashboard/activities/{{.ID}}/supporters" class="btn btn-view">Supporters</a>
+              </td>
             </tr>
-        {{ else }}
+            {{ else }}
             <tr>
-                <td colspan="5">No activities found.</td>
+              <td colspan="5">No activities found.</td>
             </tr>
-        {{ end }}
-        </tbody>
-    </table>
+            {{ end }}
+          </tbody>
+        </table>
+      </section>
 
-    <h2>Add Activity</h2>
-    <form method="post" action="/dashboard/activities/" id="addForm">
-        <label>Message ID:</label>
-        <input type="number" name="message_id" required><br>
-        <label>Title:</label>
-        <input type="text" name="title" required><br>
-        <label>Support Prompt ID (optional):</label>
-        <input type="number" name="prompt_message_id"><br>
-        <button type="submit">Add</button>
-    </form>
+      <section class="card form-card">
+        <h2>Add Activity</h2>
+        <form id="addForm" method="post" action="/dashboard/activities/">
+          <label>Message ID</label>
+          <input type="number" name="message_id" required>
 
-    <script src="/static/js/activity.js"></script>
+          <label>Title</label>
+          <input type="text" name="title" required>
+
+          <label>Prompt ID (optional)</label>
+          <input type="number" name="prompt_message_id">
+
+          <button type="submit" class="btn btn-primary">Add Activity</button>
+        </form>
+      </section>
+    </main>
+  </div>
+  <script src="/static/js/activity.js"></script>
 </body>
 </html>
 {{ end }}

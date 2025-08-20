@@ -1,99 +1,71 @@
-{{define "activity_supporters.html"}}
+{{ define "activity_supporters.html" }}
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>{{.Title}}</title>
-    <!-- TODO: change style sheet -->
-    <link rel="stylesheet" href="/static/css/dashboard.css" />
-  </head>
-  <body>
-    <div class="dashboard-container">
-      <header class="dashboard-header">
-        <nav class="dashboard-nav">
-          <a href="/dashboard" class="nav-link">Dashboard</a>
-          <a href="/dashboard/activities" class="nav-link">Activities</a>
-          <a href="/api/logout" class="nav-link logout">Logout</a>
-        </nav>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{.Title}}</title>
+  <link rel="stylesheet" href="/static/css/activity.css">
+</head>
+<body>
+  <div class="admin-container">
+    <aside class="sidebar">
+      <h2 class="sidebar-title">Admin Panel</h2>
+      <nav class="sidebar-nav">
+        <a href="/dashboard" class="nav-link">Dashboard</a>
+        <a href="/dashboard/activities" class="nav-link">Activities</a>
+        <a href="/api/logout" class="nav-link logout">Logout</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>Supporters for "{{.Data.Activity.Title}}"</h1>
       </header>
 
-      <main class="dashboard-main">
-        <div class="supporters-container">
-          <h1>Supporters for #{{.Data.Activity.Title}}</h1>
-          <div class="activity-info">
-            <a href="/dashboard/activities" class="btn btn-back"
-              >Back to Activities</a
-            >
+      <section class="card">
+        <div class="actions-bar">
+          <a href="/dashboard/activities" class="btn btn-back">← Back to Activities</a>
+
+          {{ if .Data.Supporters }}
+          <div class="export-buttons">
+            <a href="/dashboard/activities/{{.Data.Activity.ID}}/supporters/export/json" class="btn btn-view">Download JSON</a>
+            <a href="/dashboard/activities/{{.Data.Activity.ID}}/supporters/export/csv" class="btn btn-view">Download CSV</a>
+            <a href="/dashboard/activities/{{.Data.Activity.ID}}/supporters/export/pdf" class="btn btn-view">Download PDF</a>
           </div>
-
-          {{if .Data.Supporters}}
-          <!--
-<div class="export-section">
-  <label for="export-format">Export Format:</label>
-  <select id="export-format">
-    <option value="">-- Select Format --</option>
-    <option value="json">JSON</option>
-    <option value="csv">CSV</option>
-    <option value="pdf">PDF</option>
-  </select>
-  <button
-    id="exportBtn"
-    onclick="initiateExport(this)"
-    data-activity-id="{{.Data.Activity.ID}}"
-    data-activity-title="{{js .Data.Activity.Title}}"
-  >
-    Export
-  </button>
-</div>
--->
-
-          <div class="export-section">
-            <a
-              href="/dashboard/activities/{{.Data.Activity.ID}}/supporters/export/json"
-              download
-              >Download JSON</a
-            >
-            |
-            <a
-              href="/dashboard/activities/{{.Data.Activity.ID}}/supporters/export/csv"
-              download
-              >Download CSV</a
-            >
-            |
-            <a
-              href="/dashboard/activities/{{.Data.Activity.ID}}/supporters/export/pdf"
-              download
-              >Download PDF</a
-            >
-          </div>
-
-          <h2>Supporters ({{len .Data.Supporters}})</h2>
-
-          <table class="supporters-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>User ID</th>
-                <th>Joined At</th>
-              </tr>
-            </thead>
-            <tbody>
-              {{range .Data.Supporters}}
-              <tr>
-                <td>{{.ID}}</td>
-                <td>{{.UserID}}</td>
-                <td>{{.JoinedAt.Format "2006-01-02 15:04:05"}}</td>
-              </tr>
-              {{end}}
-            </tbody>
-          </table>
-          {{else}}
-          <p class="no-supporters">No supporters found for this activity.</p>
-          {{end}}
+          {{ end }}
         </div>
-      </main>
-    </div>
+      </section>
 
-    <script src="/static/js/activity_supporters.js"></script>
-  </body>
+      <section class="card">
+        {{ if .Data.Supporters }}
+        <h2>Supporters ({{ len .Data.Supporters }})</h2>
+        <table class="activity-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>User ID</th>
+              <th>Joined At</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{ range .Data.Supporters }}
+            <tr>
+              <td>{{ .ID }}</td>
+              <td>{{ .UserID }}</td>
+              <td>{{ .JoinedAt.Format "2006-01-02 15:04:05" }}</td>
+            </tr>
+            {{ end }}
+          </tbody>
+        </table>
+        {{ else }}
+        <p class="no-supporters">No supporters found for this activity.</p>
+        {{ end }}
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/js/activity_supporters.js"></script>
+</body>
 </html>
-{{end}}
+{{ end }}

@@ -1,45 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="/static/css/dashboard.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="icon" type="image/x-icon" href="/static/images/favicon.jpg">
+  <link rel="stylesheet" href="/static/css/dashboard.css">
 </head>
 <body>
-    <div class="dashboard-container">
-        <header class="dashboard-header">
-            <h1>Welcome to Admin Dashboard</h1>
-            <nav class="dashboard-nav">
-                <a href="/dashboard/activities" class="nav-link active">Activities</a>
-                <a href="/dashboard" class="nav-link active">Supporters</a>
-                <a href="/api/logout" class="nav-link logout">Logout</a>
-            </nav>
-        </header>
-        
-        <main class="dashboard-main">
-            <div class="welcome-section">
-                <h2>Welcome back, Admin!</h2>
-                <p>You are successfully logged in to the admin panel.</p>
-            </div>
-            
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h3>Total Users</h3>
-                    <p class="stat-number">TODO (optional)</p>
-                </div>
-                <div class="stat-card">
-                    <h3>Total activities</h3>
-                    <p class="stat-number">{{if .Data}}{{.Data.ActivityCount}}{{else}}0{{end}}</p>
-                </div>
-                <div class="stat-card">
-                    <h3>System Status</h3>
-                    <p class="stat-status online">Online(TODO)</p>
-                </div>
-            </div>
-        </main>
-    </div>
+  <div class="dashboard-container">
+    <header class="dashboard-header">
+      <div class="header-left">
+        <h1>Barf Yar ❄️ Admin Panel</h1>
+      </div>
+      <nav class="dashboard-nav">
+        <a href="/dashboard" class="nav-link active">Dashboard</a>
+        <a href="/dashboard/activities" class="nav-link">Activities</a>
+        <a href="/api/logout" class="nav-link logout">Logout</a>
+      </nav>
+    </header>
 
-    <script src="/static/js/dashboard.js"></script>
+    <main class="dashboard-main">
+
+      <div class="welcome-section card">
+        <h2>Welcome back, Admin!</h2>
+        <p>Today is <strong>Thursday, August 22nd</strong></p>
+        <p>Last login: <strong>1 hour ago, Admin1</strong></p>
+        <a href="/dashboard/activities" class="btn btn-primary">+ Add Activity</a>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card users-card">
+          <h3>👥 Total Users</h3>
+          <p class="stat-number">50</p>
+        </div>
+        <div class="stat-card activities-card">
+          <h3>📌 Total Activities</h3>
+          <p class="stat-number">{{if .Data}}{{.Data.ActivityCount}}{{else}}0{{end}}</p>
+        </div>
+        <div class="stat-card status-card">
+          <h3>⚡ System Status</h3>
+          <p class="stat-status online">Online</p>
+        </div>
+      </div>
+
+      <section class="recent-activities">
+        <h2>Recent Activities</h2>
+        <ul>
+          <li>Collected donations for winter clothing drive</li>
+          <li>Organized a charity fundraising event</li>
+          <li>Delivered meals to local shelters</li>
+          <li>Updated volunteer database</li>
+          <li>Prepared care packages for children</li>
+        </ul>
+        <a href="/dashboard/activities" class="btn btn-primary">View All</a>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="/static/js/dashboard.js"></script>
 </body>
 </html>
