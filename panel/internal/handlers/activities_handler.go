@@ -6,6 +6,7 @@ import (
 	"time"
 	"net/http"
 	"strconv"
+	"fmt"
 	_ "strings"
 
 	"github.com/Reza-namvaran/Barf-Yar/panel/internal/models"
@@ -138,21 +139,20 @@ func (h *Handlers) ExportSupporters(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//TODO: Generate a filename with timestamp
-	// timestamp := time.Now().Format("20060102_150405")
-	// filename := fmt.Sprintf("supporters_activity_%d_%s.%s", activityID, timestamp, format)
-	filename := "export"
+	timestamp := time.Now().Format("20060102_150405")
+	filename := fmt.Sprintf("supporters_activity_%d_%s.%s", activityID, timestamp, format)
+	quotedFilename := strconv.Quote(filename)
 	
 
 	switch format {
 	case "json":
-		w.Header().Set("Content-Disposition", "attachment; filename="+filename)
+		w.Header().Set("Content-Disposition", "attachment; filename="+quotedFilename)
 		h.exportJSON(w, supporters)
 	case "csv":
-		w.Header().Set("Content-Disposition", "attachment; filename="+filename)
+		w.Header().Set("Content-Disposition", "attachment; filename="+quotedFilename)
 		h.exportCSV(w, supporters)
 	case "pdf":
-		w.Header().Set("Content-Disposition", "attachment; filename="+filename)
+		w.Header().Set("Content-Disposition", "attachment; filename="+quotedFilename)
 		h.exportPDF(w, supporters)
 	default:
 		http.Error(w, "Unsupported format", http.StatusBadRequest)
@@ -161,8 +161,11 @@ func (h *Handlers) ExportSupporters(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handlers) exportJSON(w http.ResponseWriter, supporters []*models.Supporter) {
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(supporters)
+	
+	if err := json.NewEncoder(w).Encode(supporters); err != nil {
+		http.Error(w, "Failed to generate JSON export", http.StatusInternalServerError)
+		return
+	}
 }
 
 func (h *Handlers) exportCSV(w http.ResponseWriter, supporters []*models.Supporter) {
@@ -171,15 +174,23 @@ func (h *Handlers) exportCSV(w http.ResponseWriter, supporters []*models.Support
 	defer writer.Flush()
 
 	// Write header
-	writer.Write([]string{"ID", "Activity ID", "User ID", "Joined At"})
+	if err := writer.Write([]string{"ID", "Activity ID", "User ID", "Joined At"}); err != nil {
+		http.Error(w, "Failed to generate CSV export", http.StatusInternalServerError)
+		return
+	}
 
 	for _, s := range supporters {
-		writer.Write([]string{
+		record := []string{
 			strconv.Itoa(s.ID),
 			strconv.Itoa(s.ActivityID),
 			strconv.FormatInt(s.UserID, 10),
 			s.JoinedAt.Format(time.RFC3339),
-		})
+		}
+		
+		if err := writer.Write(record); err != nil {
+			http.Error(w, "Failed to generate CSV export", http.StatusInternalServerError)
+			return
+		}
 	}
 }
 
@@ -207,5 +218,9 @@ func (h *Handlers) exportPDF(w http.ResponseWriter, supporters []*models.Support
 	}
 
 	w.Header().Set("Content-Type", "application/pdf")
-	pdf.Output(w)
+	
+	if err := pdf.Output(w); err != nil {
+		http.Error(w, "Failed to generate PDF export", http.StatusInternalServerError)
+		return
+	}
 }
