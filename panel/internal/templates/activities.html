@@ -22,6 +22,7 @@
                 <td>{{.ID}}</td>
                 <td>{{.MessageID}}</td>
                 <td>{{.Title}}</td>
+                <td>{{ if .PromptMessageID }}{{ .PromptMessageID }}{{ else }}-{{ end }}</td>
             </tr>
             {{end}}
         </tbody>

@@ -13,14 +13,16 @@ type Handlers struct {
 	authService     service.AuthService
 	adminService    service.AdminService
 	activityService service.ActivityService
+	supporterService service.SupporterService
 	templateService *templates.TemplateService
 }
 
-func NewHandlers(authService service.AuthService, adminService service.AdminService, activityService service.ActivityService, templateService *templates.TemplateService) *Handlers {
+func NewHandlers(authService service.AuthService, adminService service.AdminService, activityService service.ActivityService, supporterService service.SupporterService, templateService *templates.TemplateService) *Handlers {
 	return &Handlers{
 		authService:     authService,
 		adminService:    adminService,
 		activityService: activityService,
+		supporterService: supporterService,
 		templateService: templateService,
 	}
 }

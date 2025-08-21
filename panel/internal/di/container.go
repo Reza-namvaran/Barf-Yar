@@ -18,11 +18,13 @@ type Container struct {
 	// Repositories
 	adminRepo    repository.AdminRepository
 	activityRepo repository.ActivityRepository
+	supporterRepo repository.SupporterRepository
 
 	// Services
 	authService     service.AuthService
 	adminService    service.AdminService
 	activityService service.ActivityService
+	supporterService service.SupporterService
 
 	// Others
 	templateService *templates.TemplateService
@@ -65,6 +67,15 @@ func (c *Container) GetActivityRepository() repository.ActivityRepository {
 	}
 	return c.activityRepo
 }
+
+func (c *Container) GetSupporterRepository() repository.SupporterRepository {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if c.supporterRepo == nil {
+		c.supporterRepo = repository.NewSupporterRepository(c.db)
+	}
+	return c.supporterRepo
+}  
 
 // --- Services ---
 func (c *Container) GetAuthService() service.AuthService {
@@ -109,6 +120,22 @@ func (c *Container) GetActivityService() service.ActivityService {
     return c.activityService
 }
 
+func (c *Container) GetSupporterService() service.SupporterService {
+	if c.supporterService != nil {
+		return c.supporterService
+	}
+
+	repo := c.GetSupporterRepository()
+
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if c.supporterService == nil {
+		c.supporterService = service.NewSupporterService(repo)
+		log.Printf("After supporter")
+	}
+	return c.supporterService
+}
+
 
 // --- Template ---
 func (c *Container) GetTemplateService() *templates.TemplateService {
@@ -134,6 +161,7 @@ func (c *Container) GetHandlers() *handlers.Handlers {
 		c.GetAuthService(),
 		c.GetAdminService(),
 		c.GetActivityService(),
+		c.GetSupporterService(),
 		c.GetTemplateService(),
 	)
 }

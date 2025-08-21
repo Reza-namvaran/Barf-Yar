@@ -1,0 +1,71 @@
+{{ define "activity_supporters.html" }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{.Title}}</title>
+  <link rel="stylesheet" href="/static/css/activity.css">
+</head>
+<body>
+  <div class="admin-container">
+    <aside class="sidebar">
+      <h2 class="sidebar-title">Admin Panel</h2>
+      <nav class="sidebar-nav">
+        <a href="/dashboard" class="nav-link">Dashboard</a>
+        <a href="/dashboard/activities" class="nav-link">Activities</a>
+        <a href="/api/logout" class="nav-link logout">Logout</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>Supporters for "{{.Data.Activity.Title}}"</h1>
+      </header>
+
+      <section class="card">
+        <div class="actions-bar">
+          <a href="/dashboard/activities" class="btn btn-back">← Back to Activities</a>
+
+          {{ if .Data.Supporters }}
+          <div class="export-buttons">
+            <a href="/dashboard/activities/{{.Data.Activity.ID}}/supporters/export/json" class="btn btn-view">Download JSON</a>
+            <a href="/dashboard/activities/{{.Data.Activity.ID}}/supporters/export/csv" class="btn btn-view">Download CSV</a>
+            <a href="/dashboard/activities/{{.Data.Activity.ID}}/supporters/export/pdf" class="btn btn-view">Download PDF</a>
+          </div>
+          {{ end }}
+        </div>
+      </section>
+
+      <section class="card">
+        {{ if .Data.Supporters }}
+        <h2>Supporters ({{ len .Data.Supporters }})</h2>
+        <table class="activity-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>User ID</th>
+              <th>Joined At</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{ range .Data.Supporters }}
+            <tr>
+              <td>{{ .ID }}</td>
+              <td>{{ .UserID }}</td>
+              <td>{{ .JoinedAt.Format "2006-01-02 15:04:05" }}</td>
+            </tr>
+            {{ end }}
+          </tbody>
+        </table>
+        {{ else }}
+        <p class="no-supporters">No supporters found for this activity.</p>
+        {{ end }}
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/js/activity_supporters.js"></script>
+</body>
+</html>
+{{ end }}
