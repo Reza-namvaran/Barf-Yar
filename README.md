@@ -76,3 +76,29 @@ By combining a modern **admin panel** (Go + PostgreSQL) with a dynamic **Telegra
 - Organize supporters using dynamic labels and broadcast reminders at the right time  
 
 This project demonstrates the ability of BASU students to deliver impactful, community-driven solutions that blend **computer science education** with **real-world social responsibility**.  
+
+---
+
+Perfect! Here's a **friendly and appreciative version** of your Contributors section for the README:
+
+---
+
+## Contributors
+This project is made possible thanks to the dedication and collaboration of our amazing team from BASU Computer Engineering Student Association:
+
+* **Daniel Keshavarz Nejad** – Project Lead, guiding the vision and direction of the project
+* **Reza Namvaran** – Technical Lead / Manager, coordinating development and ensuring technical excellence
+* **Saeed Mazaheri** – Back-end Developer & Mentor, providing guidance and core backend solutions
+* **Hossein Fazel** – Back-end / Bot Developer & Mentor, supporting development and mentoring team members
+* **Pouya Tavakoli** – Back-end Developer, implementing key features and logic
+* **Maryam Nokohan** – Intern, contributing with enthusiasm and fresh ideas
+* **Taha Sadeghi** – Intern, assisting with development and learning through practice
+* **Kasra Ali Rezaee** – Intern, supporting tasks and gaining hands-on experience
+
+> Every contribution has made this project stronger—thank you all for your hard work and dedication!
+
+<a href="https://github.com/Reza-namvaran/barf-yar/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Reza-namvaran/barf-yar" />
+</a>
+
+Made with [contrib.rocks](https://contrib.rocks).
