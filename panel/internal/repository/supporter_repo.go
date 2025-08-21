@@ -23,7 +23,7 @@ func (r *supporterRepository) GetByActivityID(activityID int) ([]*models.Support
 			  ORDER BY joined_at DESC`
 	rows, err := r.db.Query(query, activityID)
 	if err != nil {
-		return nil, err
+		return nil, ErrFailedToFetch
 	}
 	defer rows.Close()
 
@@ -32,7 +32,7 @@ func (r *supporterRepository) GetByActivityID(activityID int) ([]*models.Support
 		var s models.Supporter
 		err := rows.Scan(&s.ID, &s.ActivityID, &s.UserID, &s.JoinedAt)
 		if err != nil {
-			return nil, err
+			return nil, ErrFailedToScan
 		}
 		supporters = append(supporters, &s)
 	}

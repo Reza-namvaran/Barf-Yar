@@ -3,7 +3,6 @@ package repository
 import (
 	"database/sql"
 	"time"
-	"errors"
 )
 
 type SessionRepository interface {
@@ -23,7 +22,7 @@ func NewSessionRepository(db *sql.DB) SessionRepository {
 func (repo *sessionRepo) Save(token string, expiresAt time.Time) error {
     _, err := repo.db.Exec(`INSERT INTO sessions (token, expires_at) VALUES ($1, $2)`, token, expiresAt)
     if err != nil {
-		return errors.New("Could not save session")
+		return ErrSaveSession
 	}
 	
 	return nil
@@ -33,7 +32,7 @@ func (repo *sessionRepo) GetExpiry(token string) (time.Time, error) {
 	var expiresAt time.Time
 	err := repo.db.QueryRow(`SELECT expires_at FROM sessions WHERE token=$1`, token).Scan(&expiresAt)
 	if err != nil {
-		return expiresAt, errors.New("Failed to fetch data")
+		return expiresAt, ErrFailedToFetch
 	}
 
 	return expiresAt, nil
@@ -42,7 +41,7 @@ func (repo *sessionRepo) GetExpiry(token string) (time.Time, error) {
 func (repo *sessionRepo) Delete(token string) error {
     _, err := repo.db.Exec(`DELETE FROM sessions WHERE token=$1`, token)
 	if err != nil {
-		return errors.New("Can't delete session")
+		return ErrDeleteSession
 	}
 
     return nil

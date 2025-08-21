@@ -2,7 +2,6 @@ package repository
 
 import (
 	"database/sql"
-	"errors"	
 
 	"github.com/Reza-namvaran/Barf-Yar/panel/internal/models"
 )
@@ -34,7 +33,7 @@ func (repo *activityRepo) GetByID(id int) (*models.Activity, error) {
         WHERE a.id = $1`, id)
 
     if err != nil {
-        return nil, errors.New("failed to fetch activity")
+        return nil, ErrFetchActivity
     }
     defer rows.Close()
 
@@ -50,13 +49,13 @@ func (repo *activityRepo) GetByID(id int) (*models.Activity, error) {
             &activity.PromptMessageID,
         )
         if err != nil {
-            return nil, errors.New("failed to scan activity data")
+            return nil, ErrFailedToScan
         }
         break
     }
 
     if err = rows.Err(); err != nil {
-        return nil, errors.New("error iterating through rows")
+        return nil, ErrIteration
     }
 
     if !found {
@@ -72,7 +71,7 @@ func (repo *activityRepo) GetAll() ([]*models.Activity, error) {
 		LEFT JOIN activity_prompts ap ON a.id = ap.activity_id
 		ORDER BY a.id ASC`)
 	if err != nil {
-		return nil, errors.New("Failed to fetch all activities")
+		return nil, ErrAllActivities
 	}
 	defer rows.Close()
 	
@@ -81,7 +80,7 @@ func (repo *activityRepo) GetAll() ([]*models.Activity, error) {
 		activity := &models.Activity{}
 		err = rows.Scan(&activity.ID, &activity.MessageID, &activity.Title, &activity.PromptMessageID)
 		if err != nil {
-			return nil, errors.New("Failed to create activity")
+			return nil, ErrCreateActivity
 		}
 
 		allActivities = append(allActivities, activity)
@@ -97,7 +96,7 @@ func (repo *activityRepo) Insert(activity *models.Activity) (int, error) {
 		VALUES ($1, $2)
 		RETURNING id`, activity.MessageID, activity.Title).Scan(&id)
 	if err != nil {
-		return 0, errors.New("Could not save activity")
+		return 0, ErrSaveActivity
 	}
 
 	return id, nil
@@ -111,7 +110,7 @@ func (repo *activityRepo) LinkSupportPrompt(activityID, supportPromptID int) err
 		SET prompt_message_id = EXCLUDED.prompt_message_id`, activityID, supportPromptID)
 	
 	if err != nil {
-		return errors.New("Could not link prompt to activity")
+		return ErrLinkActivity
 	}
 
 	return nil
@@ -120,7 +119,7 @@ func (repo *activityRepo) LinkSupportPrompt(activityID, supportPromptID int) err
 func (repo *activityRepo) RemoveSupportPrompt(activityID int) error {
 	_, err := repo.db.Exec(`DELETE FROM activity_prompts WHERE activity_id = $1`, activityID)
 	if err != nil {
-		return errors.New("Could not remove prompt link from activity")
+		return ErrRemoveLink
 	}
 
 	return nil
@@ -134,7 +133,7 @@ func (repo *activityRepo) Update(activity *models.Activity) error {
 		`, activity.MessageID, activity.Title, activity.ID)
 	
 	if err != nil {
-		return errors.New("failed to update activity")
+		return ErrUpdateActivity
 	}
 
 	if activity.PromptMessageID != nil {
@@ -158,7 +157,7 @@ func (repo *activityRepo) Count() (int, error) {
 	var count int
 	err := repo.db.QueryRow(`SELECT COUNT(*) FROM activities`).Scan(&count)
 	if err != nil {
-		return 0, errors.New("Can't fecth data")
+		return 0, ErrFailedToFetch
 	}
 
 	return count, nil
@@ -171,7 +170,7 @@ func (repo *activityRepo) ExistsByMessageID(id int) (bool, error) {
 	id,).Scan(&exists)
 
 	if err != nil {
-		return false, errors.New("Can't fetch data")
+		return false, ErrFailedToFetch
 	}
 
 	return exists, nil

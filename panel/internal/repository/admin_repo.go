@@ -2,7 +2,6 @@ package repository
 
 import (
 	"database/sql"
-	"errors"
 
 	"github.com/Reza-namvaran/Barf-Yar/panel/internal/models"
 )
@@ -28,7 +27,7 @@ func (repo *adminRepo) GetByUsername(username string) (*models.Admin, error) {
 		WHERE username = $1`, username).Scan(&admin.ID, &admin.Username, &admin.PasswordHash)
 
 	if err != nil {
-		return nil, errors.New("Failed to fetch admin data")
+		return nil, ErrFailedToFetch
 	}
 
 	return admin, nil
@@ -42,7 +41,7 @@ func (repo *adminRepo) Create(admin *models.Admin) error {
         admin.Username, admin.PasswordHash,)
 	
 	if err != nil {
-		return errors.New("Failed to create admin")
+		return ErrCreateAdmin
 	}
 
 	return nil
