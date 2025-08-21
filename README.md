@@ -1,10 +1,10 @@
 
 
-# برف‌یار (Barf-Yar) ❄️  
+# Barf Yar ❄️  
 Telegram bot for managing charity activities, contributors, and broadcast targeted reminders.  
 
 ## ✨ Features
-- **Telegram Bot**
+- **Telegram Bot (pyTelegramBotAPI)**
   - List activities dynamically
   - Uses an archive channel to reduce media load
   - Forward activity & support prompts
@@ -64,3 +64,15 @@ Panel will run on → `http://localhost:8080`
    ```
 
 ---
+
+## 🏫 About the Project
+Barf Yar is a collaborative project developed by students of the **Computer Engineering Department at Bu-Ali Sina University (BASU)**, under the guidance of the **BASU Computer Engineering Student Association**.  
+
+This system was designed to solve a real need for **Barf-No(برف نو)** charity: managing activities, collaborators, and targeted reminders in an efficient and scalable way.  
+
+By combining a modern **admin panel** (Go + PostgreSQL) with a dynamic **Telegram bot**, the project empowers charity administrators to:  
+- Coordinate events and activities more effectively  
+- Engage volunteers through Telegram with minimal effort  
+- Organize supporters using dynamic labels and broadcast reminders at the right time  
+
+This project demonstrates the ability of BASU students to deliver impactful, community-driven solutions that blend **computer science education** with **real-world social responsibility**.  
