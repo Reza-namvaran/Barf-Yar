@@ -64,9 +64,9 @@ function toggleEdit(id) {
   const prompt = cells[3].innerText.trim() !== "—" ? cells[3].innerText.trim() : "";
 
   // Replace cells with input fields
-  cells[1].innerHTML = `<input type="number" id="msg-${id}" value="${messageId}">`;
-  cells[2].innerHTML = `<input type="text" id="title-${id}" value="${title}">`;
-  cells[3].innerHTML = `<input type="number" id="prompt-${id}" value="${prompt}">`;
+  cells[1].innerHTML = `<input class="row-input" type="number" id="msg-${id}" value="${messageId}">`;
+  cells[2].innerHTML = `<input class="row-input" type="text" id="title-${id}" value="${title}">`;
+  cells[3].innerHTML = `<input class="row-input" type="number" id="prompt-${id}" value="${prompt}">`;
 
   // Replace actions with Save/Cancel
   cells[4].innerHTML = `
