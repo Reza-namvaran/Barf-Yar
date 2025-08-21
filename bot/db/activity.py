@@ -68,3 +68,14 @@ def get_collaborators(activity_id: int):
     cur.close()
     conn.close()
     return [row[0] for row in rows]
+
+def get_support_prompt(activity_id: int):
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT prompt_message_id FROM activity_prompts WHERE activity_id = %s", (activity_id,)
+    )
+    row = cur.fetchone()
+    cur.close()
+    conn.close()
+    return row
