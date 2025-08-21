@@ -84,12 +84,12 @@ This project is made possible thanks to the dedication and collaboration of our 
 
 * **Daniel Keshavarz Nejad** – Project Lead, guiding the vision and direction of the project
 * **Reza Namvaran** – Technical Lead / Manager, coordinating development and ensuring technical excellence
-* **Saeed Mazaheri** – Back-end Developer & Mentor, providing guidance and core backend solutions
+* **Saeed Mazahery** – Back-end Developer & Mentor, providing guidance and core backend solutions
 * **Hossein Fazel** – Back-end / Bot Developer & Mentor, supporting development and mentoring team members
 * **Pouya Tavakoli** – Back-end Developer, implementing key features and logic
 * **Maryam Nokohan** – Intern, contributing with enthusiasm and fresh ideas
 * **Taha Sadeghi** – Intern, assisting with development and learning through practice
-* **Kasra Ali Rezaee** – Intern, supporting tasks and gaining hands-on experience
+* **Kasra Ali Rezaie** – Intern, supporting tasks and gaining hands-on experience
 
 > Every contribution has made this project stronger—thank you all for your hard work and dedication!
 
