@@ -23,7 +23,8 @@ def collaboration_handler(bot):
 
             bot.send_message(
                 call.message.chat.id,
-                f"🙏 Thank you {call.from_user.first_name}! You are now a supporter of activity #{activity_id}."
+                f"{call.from_user.first_name} عزیز\nf"{call.from_user.first_name} عزیز\nاز مشارکت شما در این فعالیت ممنونیم"
+از مشارکت شما در این فعالیت ممنونیم"
             )
 
         except Exception as e:
