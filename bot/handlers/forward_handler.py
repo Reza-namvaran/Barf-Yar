@@ -1,6 +1,7 @@
 from bot.db.activity import get_activities_by_id
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from dotenv import load_dotenv
+from bot.handlers.colloberation import get_collaboration_menu
 import os
 
 load_dotenv(override=True)
@@ -25,12 +26,16 @@ def forward_handler(bot):
 
             message_id, title = data
 
+              # Get collaboration keyboard
+            collab_keyboard = get_collaboration_menu(activity_id)
+
+            # Forward the activity message with collaboration buttons
             bot.copy_message(
                 chat_id=call.message.chat.id,
                 from_chat_id=PRIVATE_CHANNEL_ID,
-                message_id=message_id
+                message_id=message_id,
+                reply_markup=collab_keyboard
             )
-
             bot.answer_callback_query(call.id, f"Activity: {title}")
 
         except Exception as e:
