@@ -79,10 +79,6 @@ This project demonstrates the ability of BASU students to deliver impactful, com
 
 ---
 
-Perfect! Here's a **friendly and appreciative version** of your Contributors section for the README:
-
----
-
 ## Contributors
 This project is made possible thanks to the dedication and collaboration of our amazing team from BASU Computer Engineering Student Association:
 
