@@ -22,14 +22,38 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Delete
-function deleteActivity(id) {
-  if (!confirm("Are you sure you want to delete this activity?")) return;
-  fetch(`/dashboard/activities/${id}`, { method: 'DELETE' })
-    .then(res => {
-      if (res.ok) location.reload();
-      else res.text().then(alert);
-    });
+let deleteId = null;
+const deleteModal = document.getElementById("deleteModal");
+const cancelDelete = document.getElementById("cancelDelete");
+const confirmDelete = document.getElementById("confirmDelete");
+
+function openDeleteModal(id) {
+  deleteId = id;
+  deleteModal.style.display = "flex";
 }
+
+function closeDeleteModal() {
+  deleteId = null;
+  deleteModal.style.display = "none";
+}
+
+cancelDelete.addEventListener("click", closeDeleteModal);
+
+confirmDelete.addEventListener("click", () => {
+  if (!deleteId) return;
+
+  fetch(`/dashboard/activities/${deleteId}`, { method: "DELETE"}).then(res => {
+    if (res.ok) {
+      document.getElementById(`row-${deleteId}`).remove();
+    } else {
+      res.text().then(alert);
+    }
+  }).finally(closeDeleteModal)
+});
+
+window.addEventListener("click", e => {
+  if (e.target === deleteModal) closeDeleteModal();
+});
 
 // Edit
 function toggleEdit(id) {
