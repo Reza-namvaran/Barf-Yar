@@ -1,0 +1,253 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+  
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+    display: flex;
+    min-height: 100vh;
+}
+  
+.admin-container {
+    display: flex;
+    width: 100%;
+}
+  
+.sidebar {
+    width: 220px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+  
+.sidebar-title {
+    margin-bottom: 30px;
+}
+  
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+  
+.nav-link {
+    text-decoration: none;
+    color: white;
+    padding: 10px 12px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+  
+.nav-link:hover, .nav-link.active {
+    background: rgba(255, 255, 255, 0.2);
+}
+  
+.nav-link.logout {
+    margin-top: auto;
+    background: rgba(220, 53, 69, 0.8);
+}
+  
+.nav-link.logout:hover {
+    background: rgba(220, 53, 69, 1);
+}
+  
+
+.main-content {
+    flex: 1;
+    padding: 30px;
+}
+  
+.main-header h1 {
+    margin-bottom: 20px;
+}
+  
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+  
+.activity-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+  
+.activity-table th, .activity-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+}
+  
+.activity-table tr:nth-child(even) {
+    background: #f9f9f9;
+}
+  
+.activity-table th {
+    background: #f0f2f5;
+    font-weight: bold;
+}
+  
+.btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+  
+.btn-edit {
+    background: #4cafef;
+    color: white;
+}
+
+.btn-save {
+    background: #2ecc71;
+    color: white;
+}
+
+.btn-cancel {
+    background: #ccc;
+    color: #555;
+}
+
+.btn-delete {
+    background: #e74c3c;
+    color: white;
+}
+  
+.btn-view {
+    background: #2ecc71;
+    color: white;
+}
+  
+.btn-primary {
+    background: #667eea;
+    color: white;
+    width: 100%;
+    margin-top: 10px;
+}
+  
+.btn:hover {
+    opacity: 0.9;
+}
+  
+form label {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 4px;
+    font-size: 14px;
+    color: #555;
+}
+  
+form input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.row-input {
+    border: none;
+    border-bottom: 2px solid #ccc;
+    padding: 6px 4px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    background-color: transparent;
+}
+
+.row-input:focus {
+    border-bottom-color: #667eea;
+}
+  
+.actions-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+  
+.btn-back {
+    background: #ccc;
+    color: #333;
+}
+  
+.export-buttons a {
+    margin-left: 10px;
+}
+  
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    backdrop-filter: blur(6px);
+    background: rgba(0,0,0,0.4);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+  
+.modal {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    width: 320px;
+    animation: fadeIn 0.25s ease;
+}
+  
+.modal h2 {
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+  
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+  
+.modal .btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+  
+.modal .cancel-btn {
+    background: #ccc;
+}
+  
+.modal .confirm-btn {
+    background: crimson;
+    color: white;
+}
+  
+@keyframes fadeIn {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+  
